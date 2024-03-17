@@ -9,6 +9,31 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int          @id @unique @default(autoincrement())
+  email                String       @unique
+  firstname            String?
+  lastname             String?
+  specialization       String
+  level                String
+  country              String
+  inititatedConnetions Connection[] @relation("initiator")
+  acceptorConnetions   Connection[] @relation("acceptor")
+  createdAt            DateTime     @default(now()) @map(name: "created_at")
+  updatedAt            DateTime     @default(now()) @map(name: "updated_at")
+}
+
+model Connection {
+  id          Int      @id @default(autoincrement())
+  initiator   User     @relation(name: "initiator", fields: [initiatorId], references: [id])
+  initiatorId Int
+  acceptor    User     @relation(name: "acceptor", fields: [acceptorId], references: [id])
+  acceptorId  Int
+  status      String
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @map(name: "updated_at")
 }
