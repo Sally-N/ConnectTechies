@@ -1,5 +1,3 @@
-'use client'
-
 import React from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
 import { Title, Text, Paragraph } from "@/Utils/Theme/customTheme";
@@ -18,7 +16,7 @@ const onChange: CheckboxProps['onChange'] = (e) => {
 const { useBreakpoint } = Grid;
 
 
-const SignUpComponent = () => {
+const PersonalInfoComponent = () => {
     const screens = useBreakpoint();
     const marginValues = {
         xs: "10px 10px",
@@ -50,45 +48,33 @@ const SignUpComponent = () => {
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
-                                <span style={spanStyle}>*</span>First Name
+                                <span style={spanStyle}>*</span>Country
                             </Text>
-                            <Input placeholder="Enter first name" />
-                        </Col>
-                    </Row>
-                    <Row style={{ margin: "0 0 10px" }}>
-                        <Col span={24}>
-                            <Text style={styleText}>
-                                <span style={spanStyle}>*</span>Last Name
-                            </Text>
-                            <Input placeholder="Enter last name" />
-                        </Col>
-                    </Row>
-                    <Row style={{ margin: "0 0 10px" }}>
-                        <Col span={24}>
-                            <Text style={styleText}>
-                                <span style={spanStyle}>*</span>Email address
-                            </Text>
-                            <Input placeholder="Enter email address" />
+                            <Input placeholder="Enter country" />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
 
                         <Col span={24}>
                             <Text style={styleText}>
-                                <span style={spanStyle}>*</span>Password
+                                <span style={spanStyle}>*</span>Specialization
                             </Text>
-                            <Input.Password placeholder="Password" />
+                            <Input placeholder="e.g frontend developer" />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
-                                <span style={spanStyle}>*</span>Confirm password
+                                <span style={spanStyle}>*</span>Level of profession
                             </Text>
-                            <Input.Password placeholder="Confirm password"
-                                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-
-                            />
+                            <Input placeholder="e.g beginner" />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Text style={styleText}>
+                                <span style={spanStyle}>*</span>Upload Profile Photo
+                            </Text>
                         </Col>
                     </Row>
                     <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Sign Up</Button>
@@ -99,4 +85,4 @@ const SignUpComponent = () => {
     )
 }
 
-export default SignUpComponent;
+export default PersonalInfoComponent;

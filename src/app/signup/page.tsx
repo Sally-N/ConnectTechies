@@ -1,9 +1,12 @@
-import SignUpComponent from "@/components/Foms/Auth/signup";
+'use client'
+
+import React from "react";
+import { SignUpStepperComponent } from "@/components/Stepper/signupStepper";
 
 
 
 export default function SignUpPage() {
     return (
-        <SignUpComponent />
+        <SignUpStepperComponent />
     )
 }

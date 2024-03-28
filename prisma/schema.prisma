@@ -21,6 +21,7 @@ model User {
   specialization       String
   level                String
   country              String
+  image                String?
   inititatedConnetions Connection[] @relation("initiator")
   acceptorConnetions   Connection[] @relation("acceptor")
   createdAt            DateTime     @default(now()) @map(name: "created_at")
