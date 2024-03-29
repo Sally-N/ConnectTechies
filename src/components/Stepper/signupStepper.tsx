@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Col, Row, Steps } from "antd"
 import { UserAddOutlined, AuditOutlined } from "@ant-design/icons"
 import PersonalInfoComponent from "../Foms/Auth/personalInfo"
-import CareerInfoComponent from "../Foms/Auth/personalInfo"
+import CareerInfoComponent from "../Foms/Auth/careerInfo"
 
 const { Step } = Steps
 

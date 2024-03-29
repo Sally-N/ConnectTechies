@@ -16,7 +16,7 @@ const onChange: CheckboxProps['onChange'] = (e) => {
 const { useBreakpoint } = Grid;
 
 
-const CareerInfoComponent = () => {
+const PersonalInfoComponent = () => {
     const screens = useBreakpoint();
     const marginValues = {
         xs: "10px 10px",
@@ -97,4 +97,4 @@ const CareerInfoComponent = () => {
     )
 }
 
-export default CareerInfoComponent;
+export default PersonalInfoComponent;

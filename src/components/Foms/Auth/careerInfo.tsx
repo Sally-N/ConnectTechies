@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
-import { Title, Text, Paragraph } from "@/Utils/Theme/customTheme";
+import { Title, Text } from "@/Utils/Theme/customTheme";
 import { AuthFormStyle } from "@/Utils/Theme/form";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
-import { Row, Col, Input, Checkbox, Button, Grid } from "antd"
+import { Row, Col, Input, Button, Grid, Select } from "antd"
 import type { CheckboxProps } from 'antd';
-import Link from "next/link";
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-
+import selectCountryList from "react-select-country-list";
 
 const onChange: CheckboxProps['onChange'] = (e) => {
     console.log(`checked = ${e.target.checked}`);
@@ -16,7 +14,14 @@ const onChange: CheckboxProps['onChange'] = (e) => {
 const { useBreakpoint } = Grid;
 
 
-const PersonalInfoComponent = () => {
+const CareerInfoComponent = () => {
+    const [country, setCountry] = useState('')
+    const options = useMemo(() => selectCountryList().getLabels(), [])
+
+    function changeHandler(country: string) {
+        setCountry(country)
+    }
+
     const screens = useBreakpoint();
     const marginValues = {
         xs: "10px 10px",
@@ -50,7 +55,15 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Country
                             </Text>
-                            <Input placeholder="Enter country" />
+                            <Select options={options.map((item) => ({
+                                value: item,
+                                label: item,
+                            }))}
+                                value={country} onChange={changeHandler}
+                                style={{ width: '100%' }}  >
+
+
+                            </Select>
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -85,4 +98,6 @@ const PersonalInfoComponent = () => {
     )
 }
 
-export default PersonalInfoComponent;
+export default CareerInfoComponent;
+
+
