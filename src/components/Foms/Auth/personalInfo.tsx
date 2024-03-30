@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
-import { Title, Text, Paragraph } from "@/Utils/Theme/customTheme";
+import { Title, Text } from "@/Utils/Theme/customTheme";
 import { AuthFormStyle } from "@/Utils/Theme/form";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
-import { Row, Col, Input, Checkbox, Button, Grid } from "antd"
+import { Row, Col, Input, Button, Grid } from "antd"
 import type { CheckboxProps } from 'antd';
 import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
@@ -17,6 +17,12 @@ const { useBreakpoint } = Grid;
 
 
 const PersonalInfoComponent = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
     const screens = useBreakpoint();
     const marginValues = {
         xs: "10px 10px",
@@ -50,7 +56,7 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>First Name
                             </Text>
-                            <Input placeholder="Enter first name" />
+                            <Input placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -58,7 +64,7 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Last Name
                             </Text>
-                            <Input placeholder="Enter last name" />
+                            <Input placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -66,7 +72,7 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Email address
                             </Text>
-                            <Input placeholder="Enter email address" />
+                            <Input placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -75,7 +81,7 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Password
                             </Text>
-                            <Input.Password placeholder="Password" />
+                            <Input.Password placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -85,11 +91,11 @@ const PersonalInfoComponent = () => {
                             </Text>
                             <Input.Password placeholder="Confirm password"
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-
+                                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
                             />
                         </Col>
                     </Row>
-                    <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Sign Up</Button>
+                    <Button type={'primary'} style={{ ...SignUpButtonStyle, }}>Sign Up</Button>
                 </form>
             </Col>
         </Row>
