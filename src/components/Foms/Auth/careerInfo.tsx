@@ -71,9 +71,9 @@ const CareerInfoComponent = () => {
     const marginValues = {
         xs: "10px 10px",
         sm: "10px 20px",
-        md: "20px 100px",
-        lg: "20px 200px",
-        xl: "20px 300px",
+        md: "20px 10px",
+        lg: "20px 20px",
+        xl: "20px 30px",
     };
 
     // Get the appropriate margin value based on the current screen size
@@ -86,7 +86,7 @@ const CareerInfoComponent = () => {
     };
 
     return (
-        <Row style={{ ...AuthFormStyle, margin: getMargin() }}>
+        <Row style={{ ...AuthFormStyle}}>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -144,8 +144,8 @@ const CareerInfoComponent = () => {
                                         label: 'DevOps Developer',
                                     }
                                 ]
-                            } 
-                            style={{width: '100%'}}/>
+                            }
+                                style={{ width: '100%' }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -183,7 +183,7 @@ const CareerInfoComponent = () => {
                                     }
                                 ]
                             }
-                            style={{width: '100%'}} />
+                                style={{ width: '100%' }} />
                         </Col>
                     </Row>
                     <Row>
@@ -204,7 +204,10 @@ const CareerInfoComponent = () => {
                             </Upload>
                         </Col>
                     </Row>
-                    <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Sign Up</Button>
+                    <Row justify={'space-between'} align={'middle'}>
+                        <Button type={'default'}>Previous</Button>
+                        <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Submit</Button>
+                    </Row>
                 </form>
             </Col>
         </Row >

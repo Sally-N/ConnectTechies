@@ -12,16 +12,14 @@ export const SignUpStepperComponent = () => {
 
 
     return (
-        <Row>
-            <Col>
-                <Steps current={current} onChange={(c) => setCurrent(c)}>
+        <Row style={{width: '100%', padding: '20px 80px'}}>
+            <Col span={24}>
+                <Steps current={current} onChange={(c) => setCurrent(c)} style={{margin: '10 0px'}}>
                     <Step title='Personal Information' icon={<UserAddOutlined />}></Step>
                     <Step title='Career Information' icon={<AuditOutlined />}></Step>
                 </Steps>
-                <>
                 {current == 0 && <PersonalInfoComponent />}
                 {current == 1 && <CareerInfoComponent />}
-                </>
             </Col>
         </Row>
 

@@ -27,9 +27,9 @@ const PersonalInfoComponent = () => {
     const marginValues = {
         xs: "10px 10px",
         sm: "10px 20px",
-        md: "20px 100px",
-        lg: "20px 200px",
-        xl: "20px 300px",
+        md: "20px 10px",
+        lg: "20px 20px",
+        xl: "20px 30px",
     };
 
     // Get the appropriate margin value based on the current screen size
@@ -42,7 +42,7 @@ const PersonalInfoComponent = () => {
     };
 
     return (
-        <Row style={{ ...AuthFormStyle, margin: getMargin() }}>
+        <Row style={{ ...AuthFormStyle}}>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -100,7 +100,9 @@ const PersonalInfoComponent = () => {
                             />
                         </Col>
                     </Row>
-                    <Button type={'primary'} style={{ ...SignUpButtonStyle, }}>Sign Up</Button>
+                    <Row justify={'end'} align={'middle'}>
+                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }}>Next</Button>
+                    </Row>
                 </form>
             </Col>
         </Row>
