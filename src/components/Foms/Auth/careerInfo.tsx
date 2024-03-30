@@ -6,6 +6,9 @@ import { styleText, spanStyle } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button, Grid, Select } from "antd"
 import type { CheckboxProps } from 'antd';
 import selectCountryList from "react-select-country-list";
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { message, Upload } from 'antd';
+import type { GetProp, UploadProps } from 'antd';
 
 const onChange: CheckboxProps['onChange'] = (e) => {
     console.log(`checked = ${e.target.checked}`);
@@ -13,10 +16,52 @@ const onChange: CheckboxProps['onChange'] = (e) => {
 
 const { useBreakpoint } = Grid;
 
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file: FileType) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+        message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+        message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+};
 
 const CareerInfoComponent = () => {
     const [country, setCountry] = useState('')
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>();
     const options = useMemo(() => selectCountryList().getLabels(), [])
+
+    const handleChange: UploadProps['onChange'] = (info) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            // Get this url from response in real world.
+            getBase64(info.file.originFileObj as FileType, (url) => {
+                setLoading(false);
+                setImageUrl(url);
+            });
+        }
+    };
+
+    const uploadButton = (
+        <button style={{ border: 0, background: 'none' }} type="button">
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+            <div style={{ marginTop: 8 }}>Upload</div>
+        </button>
+    );
 
     function changeHandler(country: string) {
         setCountry(country)
@@ -67,33 +112,102 @@ const CareerInfoComponent = () => {
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
-
                         <Col span={24}>
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Specialization
                             </Text>
-                            <Input placeholder="e.g frontend developer" />
+                            <Select options={
+                                [
+                                    {
+                                        value: 'Mobile Developer',
+                                        label: 'Mobile Developer'
+                                    },
+                                    {
+                                        value: 'Web developer',
+                                        label: 'Web Developer',
+                                    },
+                                    {
+                                        value: 'Frontend Developer',
+                                        label: 'Frontend Developer',
+                                    },
+                                    {
+                                        value: 'Backend Developer',
+                                        label: 'Backend Developer',
+
+                                    },
+                                    {
+                                        value: 'FullStack Developer',
+                                        label: 'Fullstack Developer'
+                                    },
+                                    {
+                                        value: 'DevOps Developer',
+                                        label: 'DevOps Developer',
+                                    }
+                                ]
+                            } 
+                            style={{width: '100%'}}/>
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
-                            <Text style={styleText}>
+                            <Text style={styleText} >
                                 <span style={spanStyle}>*</span>Level of profession
                             </Text>
-                            <Input placeholder="e.g beginner" />
+                            <Select options={
+                                [
+                                    {
+                                        value: 'Beginner',
+                                        label: 'Beginner'
+                                    },
+                                    {
+                                        value: 'Intern',
+                                        label: 'Intern',
+                                    },
+                                    {
+                                        value: 'Student',
+                                        label: 'Student',
+                                    },
+                                    {
+                                        value: 'Intermediate',
+                                        label: 'Intermediate'
+                                    },
+                                    {
+                                        value: 'Advanced',
+                                        label: 'Advanced',
+
+                                    },
+
+                                    {
+                                        value: 'Expert',
+                                        label: 'Expert',
+                                    }
+                                ]
+                            }
+                            style={{width: '100%'}} />
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
+                        <Col span={24}>
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Upload Profile Photo
                             </Text>
+                            <Upload
+                                name="avatar"
+                                listType="picture-circle"
+                                className="avatar-uploader"
+                                showUploadList={false}
+                                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                                beforeUpload={beforeUpload}
+                                onChange={handleChange}
+                            >
+                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                            </Upload>
                         </Col>
                     </Row>
                     <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Sign Up</Button>
                 </form>
             </Col>
-        </Row>
+        </Row >
 
     )
 }

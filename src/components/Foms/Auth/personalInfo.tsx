@@ -56,7 +56,8 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>First Name
                             </Text>
-                            <Input placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                            <Input placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required
+                                aria-required="true" />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -64,7 +65,8 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Last Name
                             </Text>
-                            <Input placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                            <Input placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)}
+                                aria-required="true" required />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -72,7 +74,8 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Email address
                             </Text>
-                            <Input placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            <Input placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required
+                                aria-required="true" />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -81,7 +84,8 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Password
                             </Text>
-                            <Input.Password placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            <Input.Password placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required
+                                aria-required="true" />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -92,6 +96,7 @@ const PersonalInfoComponent = () => {
                             <Input.Password placeholder="Confirm password"
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                 value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                                aria-required="true"
                             />
                         </Col>
                     </Row>
