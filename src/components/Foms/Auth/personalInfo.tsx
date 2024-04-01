@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
 import { Title, Text } from "@/Utils/Theme/customTheme";
 import { AuthFormStyle } from "@/Utils/Theme/form";
@@ -41,8 +41,14 @@ const PersonalInfoComponent = () => {
         return marginValues.xs; // default for xs and undefined
     };
 
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        let fd = new FormData(e.currentTarget)
+        console.log(fd, 'formdata');
+    }
     return (
-        <Row style={{ ...AuthFormStyle}}>
+        <Row style={{ ...AuthFormStyle }}>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -50,7 +56,7 @@ const PersonalInfoComponent = () => {
                     </Title>
                     <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
                 </Row>
-                <form style={{ padding: '20px' }}>
+                <form style={{ padding: '20px' }} onSubmit={handleSubmit}>
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
@@ -74,7 +80,7 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Email address
                             </Text>
-                            <Input placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required
+                            <Input placeholder="Enter email address" type={'email'} value={email} onChange={(e) => setEmail(e.target.value)} required
                                 aria-required="true" />
                         </Col>
                     </Row>

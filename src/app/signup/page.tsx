@@ -1,21 +1,31 @@
 'use client'
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SignUpStepperComponent } from "@/components/Stepper/signupStepper";
 import { Col, Collapse, Row } from "antd";
 import { gradientBackground } from "@/components/Foms/Auth/form";
+import { useMediaQuery } from "react-responsive";
 
 
 
 export default function SignUpPage() {
+    const isSmallScreen = useMediaQuery({ 'query': '(max-width: 576px)' })
+    const [loaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    })
+
     return (
+        loaded && (
         <Row gutter={[8, 8]}>
-            <Col span={12}>
+            <Col span={isSmallScreen ? 24 : 12}>
                 <SignUpStepperComponent />
             </Col>
-            <Col span={12} style={gradientBackground}>
+            {!isSmallScreen && <Col span={12} style={gradientBackground}>
             </Col>
+            }
 
         </Row>
-    )
-}
+        )
+    )}
