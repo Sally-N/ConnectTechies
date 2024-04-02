@@ -126,9 +126,7 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                             />
                         </Col>
                     </Row>
-                    <Row justify={'end'} align={'middle'}>
-                        <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Next</Button>
-                    </Row>
+                
                 </form>
             </Col>
         </Row>

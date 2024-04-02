@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
 import { Title, Text } from "@/Utils/Theme/customTheme";
 import { AuthFormStyle } from "@/Utils/Theme/form";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
@@ -37,7 +36,7 @@ const beforeUpload = (file: FileType) => {
     return isJpgOrPng && isLt2M;
 };
 
-const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
+const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
     const [country, setCountry] = useState('')
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>();
@@ -53,6 +52,7 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
             getBase64(info.file.originFileObj as FileType, (url) => {
                 setLoading(false);
                 setImageUrl(url);
+                setFormData({...formData, image: url})
             });
         }
     };
@@ -87,7 +87,7 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
     };
 
     return (
-        <Row style={{ ...AuthFormStyle}}>
+        <Row style={{ ...AuthFormStyle }}>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -105,7 +105,13 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 value: item,
                                 label: item,
                             }))}
-                                value={country} onChange={changeHandler}
+                                value={formData.country}
+                                onChange={(e) => {
+                                    setFormData({
+                                        ...formData,
+                                        country: e
+                                    })
+                                }}
                                 style={{ width: '100%' }} >
 
 
@@ -146,6 +152,13 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                     }
                                 ]
                             }
+                                value={formData.specialization}
+                                onChange={(e) => {
+                                    setFormData({
+                                        ...formData,
+                                        specialization: e
+                                    })
+                                }}
                                 style={{ width: '100%' }} />
                         </Col>
                     </Row>
@@ -184,6 +197,13 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                     }
                                 ]
                             }
+                                value={formData.level}
+                                onChange={(e) => {
+                                    setFormData({
+                                        ...formData,
+                                        level: e
+                                    })
+                                }}
                                 style={{ width: '100%' }} />
                         </Col>
                     </Row>
@@ -197,18 +217,18 @@ const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 listType="picture-circle"
                                 className="avatar-uploader"
                                 showUploadList={false}
-                                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                                 beforeUpload={beforeUpload}
                                 onChange={handleChange}
+
                             >
                                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                             </Upload>
                         </Col>
                     </Row>
-                    <Row justify={'space-between'} align={'middle'}>
+                    {/* <Row justify={'space-between'} align={'middle'}>
                         <Button type={'default'}>Previous</Button>
                         <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Submit</Button>
-                    </Row>
+                    </Row> */}
                 </form>
             </Col>
         </Row >

@@ -5,20 +5,22 @@ import { User } from "@/Utils/Types&Interfaces/user";
 
 const saltRounds = 10;
 
+const prisma = new PrismaClient(); // Corrected: You need to initialize PrismaClient
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         let data = req.body;
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(data.password, salt);
-        data.password = hash
+        data.password = hash;
 
         if (req.method === 'POST') {
             const { firstname, lastname, email, password } = req.body as User;
-            if (!firstname) res.status(400).json({ message: 'Missing firstname' });
-            if (!lastname) res.status(400).json({ message: 'Missing lastname' });
-            if (!email) res.status(400).json({ message: "Missing email" });
-            if (!password) res.status(400).json({ message: 'Missing password' });
+            if (!firstname) return res.status(400).json({ message: 'Missing firstname' }); // Corrected: Added return to stop execution
+            if (!lastname) return res.status(400).json({ message: 'Missing lastname' }); // Corrected: Added return to stop execution
+            if (!email) return res.status(400).json({ message: "Missing email" }); // Corrected: Added return to stop execution
+            if (!password) return res.status(400).json({ message: 'Missing password' }); // Corrected: Added return to stop execution
+            
             try {
                 const existingUser = await prisma.user.findUnique({
                     where: { email },
@@ -27,46 +29,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     const user = await prisma.user.create({
                         data: req.body
                     })
-                    return res.send('User Created Successfully')
+                    return res.send('User Created Successfully');
                 } else {
-                    res.status(404).json({ message: 'User already exists' });
+                    return res.status(409).json({ message: 'User already exists' }); // Corrected: Changed status code to 409 for conflict
                 }
             } catch (error: any) {
-                res.status(500).json({ message: error.message })
+                return res.status(500).json({ message: error.message }); // Corrected: Added return to stop execution
             }
         }
     } catch (error) {
         console.log(error);
-        // if (error.meta){
-
-        // }
-
+        return res.status(500).json({ message: "Internal Server Error" }); // Corrected: Added return to stop execution and provided a generic error message
     }
 }
 
-
 export default handler;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
