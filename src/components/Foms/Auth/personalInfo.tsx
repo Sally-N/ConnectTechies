@@ -7,6 +7,7 @@ import { Row, Col, Input, Button, Grid } from "antd"
 import type { CheckboxProps } from 'antd';
 import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { FormData } from "@/Utils/Types&Interfaces/signup";
 
 
 const onChange: CheckboxProps['onChange'] = (e) => {
@@ -16,37 +17,28 @@ const onChange: CheckboxProps['onChange'] = (e) => {
 const { useBreakpoint } = Grid;
 
 
-const PersonalInfoComponent = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-
-    const screens = useBreakpoint();
-    const marginValues = {
-        xs: "10px 10px",
-        sm: "10px 20px",
-        md: "20px 10px",
-        lg: "20px 20px",
-        xl: "20px 30px",
-    };
-
-    // Get the appropriate margin value based on the current screen size
-    const getMargin = () => {
-        if (screens.xl) return marginValues.xl;
-        if (screens.lg) return marginValues.lg;
-        if (screens.md) return marginValues.md;
-        if (screens.sm) return marginValues.sm;
-        return marginValues.xs; // default for xs and undefined
-    };
+export interface Props {
+    formData: FormData,
+    setFormData: React.Dispatch<React.SetStateAction<FormData>>
+}
 
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        let fd = new FormData(e.currentTarget)
+const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
+
+    const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const fd = new FormData(event.currentTarget);
+        
+
         console.log(fd, 'formdata');
+        const response = await fetch('/api/authentication', {
+            method: 'POST',
+            body: fd,
+          })
+
+          console.log(response, 'response')
     }
+
     return (
         <Row style={{ ...AuthFormStyle }}>
             <Col span={24}>
@@ -56,14 +48,21 @@ const PersonalInfoComponent = () => {
                     </Title>
                     <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
                 </Row>
-                <form style={{ padding: '20px' }} onSubmit={handleSubmit}>
+                <form style={{ padding: '20px' }} id="form" onSubmit={handleSubmit}>
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>First Name
                             </Text>
-                            <Input placeholder="Enter first name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required
-                                aria-required="true" />
+                            <Input placeholder="Enter first name" name="firstName" required
+                                aria-required="true"
+                                value={formData.firstname}
+                                onChange={(e) => {
+                                    setFormData({
+                                      ...formData,
+                                      firstname: e.target.value,
+                                    });
+                                  }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -71,8 +70,15 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Last Name
                             </Text>
-                            <Input placeholder="Enter last name" value={lastName} onChange={(e) => setLastName(e.target.value)}
-                                aria-required="true" required />
+                            <Input placeholder="Enter last name" name="lastName"
+                                aria-required="true" required
+                                value={formData.lastname}
+                                onChange={(e) => {
+                                    setFormData({
+                                      ...formData,
+                                      lastname: e.target.value,
+                                    });
+                                  }}  />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -80,8 +86,15 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Email address
                             </Text>
-                            <Input placeholder="Enter email address" type={'email'} value={email} onChange={(e) => setEmail(e.target.value)} required
-                                aria-required="true" />
+                            <Input placeholder="Enter email address" type={'email'} name="email" required
+                                aria-required="true" 
+                                value={formData.email}
+                                onChange={(e) => {
+                                    setFormData({
+                                      ...formData,
+                                      email: e.target.value,
+                                    });
+                                  }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -90,8 +103,15 @@ const PersonalInfoComponent = () => {
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Password
                             </Text>
-                            <Input.Password placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                                aria-required="true" />
+                            <Input.Password placeholder="Password" name="password" required
+                                aria-required="true"
+                                value={formData.password}
+                                onChange={(e) => {
+                                    setFormData({
+                                      ...formData,
+                                      password: e.target.value,
+                                    });
+                                  }}  />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -101,13 +121,13 @@ const PersonalInfoComponent = () => {
                             </Text>
                             <Input.Password placeholder="Confirm password"
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
+                               name="confirmPassword" required
                                 aria-required="true"
                             />
                         </Col>
                     </Row>
                     <Row justify={'end'} align={'middle'}>
-                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }}>Next</Button>
+                        <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Next</Button>
                     </Row>
                 </form>
             </Col>

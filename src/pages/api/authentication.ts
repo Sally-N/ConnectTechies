@@ -12,6 +12,7 @@ export const register = async(req:NextApiRequest, res: NextApiResponse) => {
         const hash = bcrypt.hashSync(data.password, salt);
         data.password = hash
 
+        
         await prisma.user.create( {
             data: req.body
         })

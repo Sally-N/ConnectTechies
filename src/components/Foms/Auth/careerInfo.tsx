@@ -9,6 +9,7 @@ import selectCountryList from "react-select-country-list";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
+import { Props } from "./personalInfo";
 
 const onChange: CheckboxProps['onChange'] = (e) => {
     console.log(`checked = ${e.target.checked}`);
@@ -36,7 +37,7 @@ const beforeUpload = (file: FileType) => {
     return isJpgOrPng && isLt2M;
 };
 
-const CareerInfoComponent = () => {
+const CareerInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
     const [country, setCountry] = useState('')
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>();
@@ -105,7 +106,7 @@ const CareerInfoComponent = () => {
                                 label: item,
                             }))}
                                 value={country} onChange={changeHandler}
-                                style={{ width: '100%' }}  >
+                                style={{ width: '100%' }} >
 
 
                             </Select>

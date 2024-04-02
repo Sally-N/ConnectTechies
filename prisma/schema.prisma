@@ -18,6 +18,7 @@ model User {
   email                String       @unique
   firstname            String?
   lastname             String?
+  password             String
   specialization       String
   level                String
   country              String

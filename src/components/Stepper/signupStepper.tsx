@@ -8,7 +8,17 @@ const { Step } = Steps
 
 export const SignUpStepperComponent = () => {
 
-    const [current, setCurrent] = useState(0)
+    const [current, setCurrent] = useState(0);
+    const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
+        country: '',
+        specialization: '',
+        level: '',
+        image: '',
+    })
 
 
     return (
@@ -18,8 +28,8 @@ export const SignUpStepperComponent = () => {
                     <Step title='Personal Information' icon={<UserAddOutlined />}></Step>
                     <Step title='Career Information' icon={<AuditOutlined />}></Step>
                 </Steps>
-                {current == 0 && <PersonalInfoComponent />}
-                {current == 1 && <CareerInfoComponent />}
+                {current == 0 && <PersonalInfoComponent formData={formData} setFormData={setFormData}/>}
+                {current == 1 && <CareerInfoComponent formData={formData} setFormData={setFormData}/>}
             </Col>
         </Row>
 
