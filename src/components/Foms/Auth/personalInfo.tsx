@@ -8,6 +8,8 @@ import type { CheckboxProps } from 'antd';
 import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { FormData } from "@/Utils/Types&Interfaces/signup";
+import { useMediaQuery } from "react-responsive";
+import { Toaster } from "react-hot-toast";
 
 
 const onChange: CheckboxProps['onChange'] = (e) => {
@@ -25,22 +27,10 @@ export interface Props {
 
 const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
 
-    const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const fd = new FormData(event.currentTarget);
-        
-
-        console.log(fd, 'formdata');
-        const response = await fetch('/api/authentication', {
-            method: 'POST',
-            body: fd,
-          })
-
-          console.log(response, 'response')
-    }
-
+ 
     return (
         <Row style={{ ...AuthFormStyle }}>
+            <Toaster/>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -48,7 +38,7 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                     </Title>
                     <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
                 </Row>
-                <form style={{ padding: '20px' }} id="form" onSubmit={handleSubmit}>
+                <form style={{ padding: '20px' }} encType="multipart/form-data">
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
@@ -123,6 +113,13 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                name="confirmPassword" required
                                 aria-required="true"
+                                value={formData.confirmPassword}
+                                onChange={(e) => {
+                                    setFormData({
+                                      ...formData,
+                                      confirmPassword: e.target.value,
+                                    });
+                                  }} 
                             />
                         </Col>
                     </Row>

@@ -25,15 +25,16 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
 };
 
 const beforeUpload = (file: FileType) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-    }
+    // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    // if (!isJpgOrPng) {
+    //     message.error('You can only upload JPG/PNG file!');
+    // }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
         message.error('Image must smaller than 2MB!');
     }
-    return isJpgOrPng && isLt2M;
+    // return isJpgOrPng && isLt2M;
+    return isLt2M;
 };
 
 const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
@@ -95,7 +96,7 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
                     </Title>
                     <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
                 </Row>
-                <form style={{ padding: '20px' }}>
+                <form style={{ padding: '20px' }} encType="multipart/form-data">
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>

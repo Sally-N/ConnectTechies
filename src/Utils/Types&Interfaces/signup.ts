@@ -3,7 +3,7 @@ export interface FormData {
     lastname: string;
     email: string;
     password: string;
-    // confirmPassword: string;
+    confirmPassword: string;
     country: string,
     specialization: string,
     level: string,
