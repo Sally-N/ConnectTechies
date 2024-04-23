@@ -1,13 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import formidable from 'formidable';
 import { hash } from 'bcrypt';
 var fs = require('fs');
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 const pump = promisify(pipeline);
 import { NextResponse } from "next/server";
-import { NextApiResponse } from "next";
-import { message } from "antd";
+
 
 
 const prisma = new PrismaClient();
@@ -24,43 +22,48 @@ export async function POST(req: any, res: Response) {
         const formdata = await req.formData();
         console.log(formdata, 'fd')
 
-        console.log(formdata.get('firstname'));
-        let img: string;
+        // console.log(formdata.get('firstname'));
+        // let img: string;
+
+        
 
         console.log(typeof formdata.get('image'), 'body')
 
         const file = formdata.get('image');
+        console.log(file, 'fild')
+        for(let image of formdata) {
+            console.log(image + ":", formdata[image]);
+        }
+    //   console.log(JSON.parse(file), 'fildfghjkd')
+
+        
         let timeStamp = Date.now();
         const filePath = `./public/userImages/${timeStamp}${file!.name}`;
         const filePathdb= `/public/userImages/${timeStamp}${file!.name}`;
         await pump(file.stream(), fs.createWriteStream(filePath));
-        // return NextResponse.json({status:"success",data:file.size })
-
         
+        const existingEmail =   formdata.get('email')
 
-        // (formdata.get('image') as any[]).map((file: any) => {
-        // })
 
-        
+        const existingUserByEmail = await prisma.user.findUnique({
+            where: { email: existingEmail },
+        })
 
-        // const form = new formidable.IncomingForm();
+         if (existingUserByEmail) {
+            return NextResponse.json({
+                message: "user with email already exists"
+            })
 
-        // form.parse(req, (err, fields, files) => {
-        //   if (err) {
-        //     console.error(err);
-        //     return NextResponse.json({
-        //         message: 'error parsing formdata',
-        //   });
-        //   }
-        //   // Process your fields and files here
-        //   NextResponse.json({status: 400})
-        // });
+        }
+
+               const hashedPassword = await hash(formdata.get('password'), 10);
+
 
         const newUser = await prisma.user.create({
             data: {
                 firstname: formdata.get('firstname'),
                 lastname: formdata.get('lastname'),
-                password: formdata.get('password'),
+                password: hashedPassword,
                 email: formdata.get('email'),
                 country: formdata.get('country'),
                 specialization: formdata.get('specialization'),
@@ -72,11 +75,8 @@ export async function POST(req: any, res: Response) {
         return NextResponse.json({
             status: 201,
             message: "User created successfully",
-            user: formdata,
+            user: newUser,
         })
-        // return NextResponse.json({
-        //     user: formdata
-        // })
 
 
     } catch (error) {
@@ -87,8 +87,13 @@ export async function POST(req: any, res: Response) {
 
 
 export async function GET() {
+
+    const allUsers = await prisma.user.findMany();
+
     return NextResponse.json({
-        name: "sally"
+        status: 201,
+        message: 'All users in the database',
+        users: allUsers
     })
 }
 

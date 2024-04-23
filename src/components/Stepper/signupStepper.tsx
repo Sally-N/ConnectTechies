@@ -23,7 +23,7 @@ export const SignUpStepperComponent = () => {
         country: '',
         specialization: '',
         level: '',
-        image: '',
+        image: {}
     })
 
     async function handleSubmit() {
@@ -38,20 +38,41 @@ export const SignUpStepperComponent = () => {
             console.log(formData, 'newx')
         }
 
-        try {
-            const formDataToSend = new FormData();
+        if (current === 1) {
+            console.log('formDta', formData)
+            console.log('Dta',  formData.image)
 
-            // Append each field in formData to formDataToSend
-            Object.entries(formData).forEach(([key, value]) => {
-                if (key !== 'confirmPassword') {
-                    formDataToSend.append(key, value);
-                }
-            });
+            
+        }
+
+        const imageInfo = {image: formData.image as Blob}
+
+        try { 
+            const formDataToSend = new FormData();
+            formDataToSend.append('firstname', formData.firstname);
+            console.log(formDataToSend, 'dfghjkl')          
+
+            formDataToSend.append('lastname', formData.lastname);
+            formDataToSend.append('email', formData.email);
+            formDataToSend.append('password', formData.password);
+            formDataToSend.append('country', formData.country);
+            formDataToSend.append('level', formData.level);
+            formDataToSend.append('specialization', formData.specialization);
+            formDataToSend.append('image', formData.image as File);
+            console.log(formDataToSend, 'dfghjkl')          
+
+
+            // Object.entries(formData).forEach(([key, value]) => {
+            //     formDataToSend.append(key, !value); // Voilà, an item is packed.
+            //     // if (value instanceof File) {
+            //     //     formDataToSend.append(key, value, value.name);
+            //     // }
+            //   });
 
             console.log(formDataToSend, 'fssss')
-            const response = await fetch('/api/user', {
+            const response = await fetch('/api/users', {
                 method: "POST",
-                body: formDataToSend,
+                body: formDataToSend
             });
             // setFormData({
             //     firstname: '',

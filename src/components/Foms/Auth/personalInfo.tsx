@@ -9,7 +9,7 @@ import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { FormData } from "@/Utils/Types&Interfaces/signup";
 import { useMediaQuery } from "react-responsive";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 
 const onChange: CheckboxProps['onChange'] = (e) => {
@@ -25,12 +25,14 @@ export interface Props {
 }
 
 
-const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
+const PersonalInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
+    const [confirmPassword, setconfirmPassword] = useState('');
+    
 
- 
+
     return (
         <Row style={{ ...AuthFormStyle }}>
-            <Toaster/>
+            <Toaster />
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -49,10 +51,10 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 value={formData.firstname}
                                 onChange={(e) => {
                                     setFormData({
-                                      ...formData,
-                                      firstname: e.target.value,
+                                        ...formData,
+                                        firstname: e.target.value,
                                     });
-                                  }} />
+                                }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -65,10 +67,10 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 value={formData.lastname}
                                 onChange={(e) => {
                                     setFormData({
-                                      ...formData,
-                                      lastname: e.target.value,
+                                        ...formData,
+                                        lastname: e.target.value,
                                     });
-                                  }}  />
+                                }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -77,14 +79,14 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 <span style={spanStyle}>*</span>Email address
                             </Text>
                             <Input placeholder="Enter email address" type={'email'} name="email" required
-                                aria-required="true" 
+                                aria-required="true"
                                 value={formData.email}
                                 onChange={(e) => {
                                     setFormData({
-                                      ...formData,
-                                      email: e.target.value,
+                                        ...formData,
+                                        email: e.target.value,
                                     });
-                                  }} />
+                                }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -98,10 +100,10 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                                 value={formData.password}
                                 onChange={(e) => {
                                     setFormData({
-                                      ...formData,
-                                      password: e.target.value,
+                                        ...formData,
+                                        password: e.target.value,
                                     });
-                                  }}  />
+                                }} />
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -111,19 +113,23 @@ const PersonalInfoComponent: React.FC<Props> = ({formData, setFormData}) => {
                             </Text>
                             <Input.Password placeholder="Confirm password"
                                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                               name="confirmPassword" required
+                                name="confirmPassword" required
                                 aria-required="true"
                                 value={formData.confirmPassword}
                                 onChange={(e) => {
+                                    // setconfirmPassword(() => e.target.value, )
+                                    // if (e.target.value !== formData.password) {
+                                    //     toast.error('Password does not match confirm passoword')
+                                    // }
                                     setFormData({
-                                      ...formData,
-                                      confirmPassword: e.target.value,
+                                        ...formData,
+                                        confirmPassword: e.target.value,
                                     });
-                                  }} 
+                                }}
                             />
                         </Col>
                     </Row>
-                
+
                 </form>
             </Col>
         </Row>

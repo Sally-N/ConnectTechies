@@ -7,5 +7,5 @@ export interface FormData {
     country: string,
     specialization: string,
     level: string,
-    image: string
+    image: object
 }

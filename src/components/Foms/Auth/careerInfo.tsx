@@ -44,6 +44,7 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
     const options = useMemo(() => selectCountryList().getLabels(), [])
 
     const handleChange: UploadProps['onChange'] = (info) => {
+        console.log('info', info)
         if (info.file.status === 'uploading') {
             setLoading(true);
             return;
@@ -53,7 +54,9 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
             getBase64(info.file.originFileObj as FileType, (url) => {
                 setLoading(false);
                 setImageUrl(url);
-                setFormData({...formData, image: url})
+                console.log('formDdfghjta', typeof info.file)
+
+                setFormData({ ...formData, image: info.fileList[0] })
             });
         }
     };
@@ -221,8 +224,9 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
                                 beforeUpload={beforeUpload}
                                 onChange={handleChange}
 
+
                             >
-                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
                             </Upload>
                         </Col>
                     </Row>
