@@ -27,7 +27,7 @@ model User {
   inititatedConnetions Connection[] @relation("initiator")
   acceptorConnetions   Connection[] @relation("acceptor")
   createdAt            DateTime     @default(now()) @map(name: "created_at")
-  updatedAt            DateTime     @default(now()) @map(name: "updated_at")
+  updatedAt            DateTime     @updatedAt @map(name: "updated_at")  
 }
 
 model Connection {
@@ -38,5 +38,5 @@ model Connection {
   acceptorId  Int
   status      String
   createdAt   DateTime @default(now()) @map(name: "created_at")
-  updatedAt   DateTime @default(now()) @map(name: "updated_at")
+  updatedAt   DateTime @default(now()) @map(name: "updated_at") @updatedAt
 }

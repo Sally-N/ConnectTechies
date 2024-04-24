@@ -19,7 +19,7 @@ export async function POST(req: any, context: any, res: Response) {
     try {
 
         const formdata = await req.formData();
-        const {params} =  context;
+        const { params } = context;
         const userId = Number(params.userid);
 
 
@@ -56,7 +56,9 @@ export async function POST(req: any, context: any, res: Response) {
                 country: formdata.get('country'),
                 specialization: formdata.get('specialization'),
                 level: formdata.get('level'),
-                image: filePathdb
+                image: filePathdb,
+                updatedAt: new Date(),
+
             }
         });
 
