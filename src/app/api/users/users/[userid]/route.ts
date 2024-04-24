@@ -1,14 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-import { hash } from 'bcrypt';
 var fs = require('fs');
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 const pump = promisify(pipeline);
 import { NextResponse } from "next/server";
+import { prisma } from "../../route";
 
 
 
- export const prisma = new PrismaClient();
 
 export const config = {
     api: {
@@ -16,55 +14,45 @@ export const config = {
     },
 };
 
-export async function POST(req: any, res: Response) {
+////update profile
+export async function POST(req: any, context: any, res: Response) {
     try {
 
         const formdata = await req.formData();
+        const {params} =  context;
+        const userId = Number(params.userid);
+
+
+        console.log(userId, 'id')
         console.log(formdata, 'fd')
 
         // console.log(formdata.get('firstname'));
         // let img: string;
 
-        
+
 
         console.log(typeof formdata.get('image'), 'body')
 
         const file = formdata.get('image');
         console.log(file, 'fild')
-        for(let image of formdata) {
+        for (let image of formdata) {
             console.log(image + ":", formdata[image]);
         }
-    //   console.log(JSON.parse(file), 'fildfghjkd')
+        //   console.log(JSON.parse(file), 'fildfghjkd')
 
-        
+
         let timeStamp = Date.now();
         const filePath = `./public/userImages/${timeStamp}${file!.name}`;
-        const filePathdb= `/public/userImages/${timeStamp}${file!.name}`;
+        const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
         await pump(file.stream(), fs.createWriteStream(filePath));
-        
-        const existingEmail =   formdata.get('email')
 
 
-        const existingUserByEmail = await prisma.user.findUnique({
-            where: { email: existingEmail },
-        })
 
-         if (existingUserByEmail) {
-            return NextResponse.json({
-                message: "user with email already exists"
-            })
-
-        }
-
-               const hashedPassword = await hash(formdata.get('password'), 10);
-
-
-        const newUser = await prisma.user.create({
+        const updateUser = await prisma.user.update({
+            where: {
+                id: (userId)
+            },
             data: {
-                firstname: formdata.get('firstname'),
-                lastname: formdata.get('lastname'),
-                password: hashedPassword,
-                email: formdata.get('email'),
                 country: formdata.get('country'),
                 specialization: formdata.get('specialization'),
                 level: formdata.get('level'),
@@ -74,14 +62,14 @@ export async function POST(req: any, res: Response) {
 
         return NextResponse.json({
             status: 201,
-            message: "User created successfully",
-            user: newUser,
+            message: "User updated successfully",
+            user: updateUser,
         })
 
 
     } catch (error) {
-        console.error('Error creating user:', error);
-        return NextResponse.json({ error: 'Error creating user', success: false });
+        console.error('Error updating user:', error);
+        return NextResponse.json({ error: 'Error updating user', success: false });
     }
 };
 
