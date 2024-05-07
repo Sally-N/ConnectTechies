@@ -3,8 +3,7 @@ import { pipeline } from 'stream';
 import { promisify } from 'util';
 const pump = promisify(pipeline);
 import { NextResponse } from "next/server";
-import { prisma } from "../../route";
-
+import { prisma } from '../route';
 
 
 
@@ -25,10 +24,6 @@ export async function POST(req: any, context: any, res: Response) {
 
         console.log(userId, 'id')
         console.log(formdata, 'fd')
-
-        // console.log(formdata.get('firstname'));
-        // let img: string;
-
 
 
         console.log(typeof formdata.get('image'), 'body')
@@ -76,15 +71,36 @@ export async function POST(req: any, context: any, res: Response) {
 };
 
 
-export async function GET() {
+export async function GET(context: any) {
+    try {
+        const { params } = context;
+        const userId = Number(params.userid);
+        console.log(userId, 'userId')
 
-    const allUsers = await prisma.user.findMany();
 
-    return NextResponse.json({
-        status: 201,
-        message: 'All users in the database',
-        users: allUsers
-    })
+        const existingUserById = await prisma.user.findUnique({
+            where: {id: userId }
+        });
+
+        if (existingUserById) {
+            return NextResponse.json({
+                status: 200,
+                message: 'User exists in database',
+                user: existingUserById
+            });
+        } else {
+            return NextResponse.json({
+                status: 404,
+                message: 'User not found in database'
+            });
+        }
+    } catch (error) {
+        return NextResponse.json({
+            status: 501,
+            message: 'Error getting user from database',
+        })
+
+    }
 }
 
 

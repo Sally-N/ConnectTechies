@@ -21,10 +21,6 @@ export async function POST(req: any, res: Response) {
 
         const formdata = await req.formData();
         console.log(formdata, 'fd')
-
-        // console.log(formdata.get('firstname'));
-        // let img: string;
-
         
 
         console.log(typeof formdata.get('image'), 'body')
