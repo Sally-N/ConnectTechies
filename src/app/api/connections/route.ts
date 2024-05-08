@@ -1,7 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { prisma } from "../users/route";
-import { message } from "antd";
 
 
 export async function GET() {

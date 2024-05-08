@@ -8,7 +8,7 @@ export async function POST(req: NextRequest, context: any){
         const body = await req.json();
 
         console.log(body,connectionId, 'mnbvcvbn')
-        const updatedConnection = await prisma.connection.update({
+        const withdrawnConnection = await prisma.connection.update({
             where: {
                 id: connectionId,
             },
@@ -19,15 +19,15 @@ export async function POST(req: NextRequest, context: any){
         })
         return NextResponse.json({
             status: 201,
-            message: 'Connection has been accepted',
-            newconnection: updatedConnection
+            message: 'Connection has been withdrawn',
+            newconnection: withdrawnConnection
         })
 
     } catch (error) {
         console.log(error, error)
         return NextResponse.json({
             status: 501,
-            message: "Error accepting connection",
+            message: "Error withrawing connection",
             error
         })
     }   
