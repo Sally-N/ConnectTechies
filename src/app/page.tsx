@@ -1,18 +1,18 @@
 'use client'
 import UserCard from '@/components/cards/user'
 import { Col, Row } from 'antd'
-import Image from 'next/image'
-// import styles from './page.module.css'
+import MainLayout from './mainlayout'
 
 export default function Home() {
   return (
-
-       <Row>
+    <MainLayout>
+      <Row>
         <Col>
-        <UserCard />
+          <UserCard />
         </Col>
-       </Row>
-      
+      </Row>
+    </MainLayout>
+
 
 
   )
