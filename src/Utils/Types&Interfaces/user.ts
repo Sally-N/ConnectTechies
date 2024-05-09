@@ -1,4 +1,6 @@
 import { Connection } from "./connection";
+
+export type AllUsers = User[];
 export interface User {
     id: number;
     email: string;

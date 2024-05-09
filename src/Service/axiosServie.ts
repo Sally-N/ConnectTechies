@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-export const baseUrl : string = 'https://example.com/api/v1';
+export const baseUrl : string = '/api';
 
 export const AxiosUtility: AxiosInstance = axios.create({
     baseURL: `${baseUrl}`,

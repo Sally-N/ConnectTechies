@@ -9,7 +9,8 @@ const { Header, Sider, Content } = Layout;
 const layoutStyle = {
     width: '100%',
     maxWidth: '100%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    minHeight: '100%'
 };
 
 
@@ -32,7 +33,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const isMediumScreen = useMediaQuery({ 'query': '(max-width: 996px)' })
     const [collapsed, setCollapsed] = useState(false);
     const {
-      token: { colorBgContainer, borderRadiusLG },
+        token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
     const [loaded, setIsLoaded] = useState(false);
@@ -49,15 +50,21 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 }}>
                     <NavbarComponent />
                 </Header>
-                <Layout style={{ width: '100%' }}>
-                    <Sider width="15%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                       <SidemenuComponent />
+                <Layout style={{
+                    width: '100%',
+                    height: 'fit-content',
+                    //  border: 'solid 10px green',
+                     minHeight: '200vh'
+                }}>
+                    <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                        <SidemenuComponent />
                     </Sider>
                     <Content style={{
                         padding: isSmallerScreen ? '25px' : '10px',
-                        width: '100%'
+                        width: '100%',
+                        overflowY: 'auto'
                     }}>
-                        
+
                         {children}
                     </Content>
                 </Layout>
