@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Avatar, Button, Card, Col, Row, Typography } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, UserAddOutlined } from '@ant-design/icons';
+import {  Button, Card, Col, Row, Typography } from 'antd';
+import { UserAddOutlined } from '@ant-design/icons';
 import { User } from '@/Utils/Types&Interfaces/user';
 
 const { Meta } = Card;
@@ -48,11 +48,10 @@ const UserCards: React.FC = () => {
         >
           <Meta
             // avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
-            title={user.firstname + user.lastname}
-            description={user.level + user.specialization}
+            title={user.firstname + ' ' + user.lastname}
+            description={user.level + ' ' + user.specialization}
             style={{backgroundColor: 'white', padding: 0, margin: 0}}
           />
-          {/* <p>{user.lastname}</p> */}
         </Card>
         </Col>
       ))
