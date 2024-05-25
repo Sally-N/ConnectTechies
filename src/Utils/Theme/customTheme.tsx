@@ -51,6 +51,7 @@ export const ConnectTechiesTheme = ({
                         boxShadow: '#f7f8f9',
                         itemSelectedBg: '#f7f8f9',
                         iconMarginInlineEnd: 0,
+                        
                     },
                     Avatar: {
                         boxShadow: '#f7f8f9',
@@ -58,6 +59,10 @@ export const ConnectTechiesTheme = ({
                     },
                     Select: {
                         optionSelectedBg: 'rgba(0, 0, 0, 0.04)',
+                    },
+                    Card: {
+                        padding: 0
+
                     },
 
                 },

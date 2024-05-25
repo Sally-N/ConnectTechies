@@ -35,10 +35,10 @@ const SidemenuComponent: React.FC = () => {
 
 
     return (
-        <>
+        <div style={{backgroundColor: 'white'}}>
             <div className="demo-logo-vertical" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-        </>
+            <Menu  defaultSelectedKeys={['1']} mode="inline" items={items} />
+        </div>
     );
 };
 

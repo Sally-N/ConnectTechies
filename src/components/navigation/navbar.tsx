@@ -11,7 +11,7 @@ const NavbarComponent: React.FC = () => {
         //     <Col>
                 <Row justify={'space-between'} align={'middle'}>
                     <Col span={4}>
-                        <Image src={"/logo.svg"} alt={""} width={100} height={40}/>
+                        <Image src={"/logo.svg"} alt={""} width={100} height={40} priority/>
                     </Col>
                     <Col span={8}>
                         <Button type={'primary'} icon={<BellOutlined />} shape={'circle'}></Button>

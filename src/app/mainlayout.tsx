@@ -3,6 +3,7 @@ import { Layout, theme } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import NavbarComponent from '@/components/navigation/navbar';
 import SidemenuComponent from '@/components/navigation/sidemenu';
+import './globals.css'
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,6 +25,7 @@ const siderStyle: React.CSSProperties = {
     lineHeight: '120px',
     color: '#fff',
     backgroundColor: 'white',
+    // border: 'solid 10px white'
 };
 
 
@@ -32,9 +34,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const isSmallerScreen = useMediaQuery({ query: "(min-width: 577px)" });
     const isMediumScreen = useMediaQuery({ 'query': '(max-width: 996px)' })
     const [collapsed, setCollapsed] = useState(false);
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
 
     const [loaded, setIsLoaded] = useState(false);
 
@@ -56,7 +55,8 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                     //  border: 'solid 10px green',
                      minHeight: '200vh'
                 }}>
-                    <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                    <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+                    >
                         <SidemenuComponent />
                     </Sider>
                     <Content style={{
