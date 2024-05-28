@@ -1,23 +1,31 @@
 import { PrismaClient } from "@prisma/client";
 import { hash } from 'bcrypt';
+import { Readable } from 'stream';
 var fs = require('fs');
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+import { NextRequest, NextResponse } from "next/server";
+
+
+const prisma = new PrismaClient();
 const pump = promisify(pipeline);
-import { NextResponse } from "next/server";
-import { notification } from "antd";
+
+function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
+    const reader = webReadable.getReader();
+    return new Readable({
+        async read() {
+            const { done, value } = await reader.read();
+            if (done) {
+                this.push(null);
+            } else {
+                this.push(Buffer.from(value));
+            }
+        }
+    });
+}
 
 
-
-export const prisma = new PrismaClient();
-
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
-export async function POST(req: any, res: Response) {
+export async function POST(req: NextRequest, res: Response) {
     try {
 
         const formdata = await req.formData();
@@ -26,20 +34,25 @@ export async function POST(req: any, res: Response) {
 
         console.log(typeof formdata.get('image'), 'body')
 
-        const file = formdata.get('image');
+        const file = formdata.get('image') as File;
         console.log(file, 'fild')
-        for (let image of formdata) {
-            console.log(image + ":", formdata[image]);
-        }
+        // for (let image of formdata) {
+        //     console.log(image + ":", formdata[image]);
+        // }
         //   console.log(JSON.parse(file), 'fildfghjkd')
 
 
         let timeStamp = Date.now();
         const filePath = `./public/userImages/${timeStamp}${file!.name}`;
         const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
-        await pump(file.stream(), fs.createWriteStream(filePath));
 
-        const existingEmail = formdata.get('email')
+
+        const nodeReadableStream = toNodeReadable(file.stream());
+        await pump(nodeReadableStream, fs.createWriteStream(filePath));
+        console.log(filePath, 'fp')
+
+
+        const existingEmail = formdata.get('email') as string;
 
 
         const existingUserByEmail = await prisma.user.findUnique({
@@ -53,18 +66,18 @@ export async function POST(req: any, res: Response) {
 
         }
 
-        const hashedPassword = await hash(formdata.get('password'), 10);
+        const hashedPassword = await hash(formdata.get('password') as string, 10);
 
 
         const newUser = await prisma.user.create({
             data: {
-                firstname: formdata.get('firstname'),
-                lastname: formdata.get('lastname'),
+                firstname: formdata.get('firstname') as string,
+                lastname: formdata.get('lastname')  as string ,
                 password: hashedPassword,
-                email: formdata.get('email'),
-                country: formdata.get('country'),
-                specialization: formdata.get('specialization'),
-                level: formdata.get('level'),
+                email: formdata.get('email')  as string,
+                country: formdata.get('country')  as string,
+                specialization: formdata.get('specialization')  as string,
+                level: formdata.get('level')  as string,
                 image: filePathdb
             }
         });
@@ -109,7 +122,7 @@ export async function POST(req: any, res: Response) {
 };
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
 
     const allUsers = await prisma.user.findMany();
 

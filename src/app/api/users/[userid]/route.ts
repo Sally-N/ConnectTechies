@@ -2,17 +2,13 @@ var fs = require('fs');
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 const pump = promisify(pipeline);
-import { NextResponse } from "next/server";
-import { prisma } from '../route';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
 
+const prisma = new PrismaClient();
 ////update profile
 export async function POST(req: any, context: any, res: Response) {
     try {
@@ -71,22 +67,51 @@ export async function POST(req: any, context: any, res: Response) {
 };
 
 
-export async function GET(context: any) {
+export async function GET(req: NextRequest, context: any) {
     try {
         const { params } = context;
         const userId = Number(params.userid);
         console.log(userId, 'userId')
 
+        if (isNaN(userId)) {
+            return NextResponse.json({
+                status: 400,
+                message: 'Invalid user ID'
+            });
+        }
 
         const existingUserById = await prisma.user.findUnique({
-            where: {id: userId }
+            where: { id: userId }
         });
+
+        const userConnections = await prisma.connection.findMany({
+            where:
+            {
+                OR: [
+                    {
+                        initiatorId: userId,
+                        status: { not: 'rejected' },
+                    },
+                    {
+                        acceptorId: userId,
+                        status: { not: 'rejected' },
+                    }
+                ]
+            },
+        })
+
+
+        const userNotifications = await prisma.notification.findMany({
+            where: {userId: userId},
+        })
 
         if (existingUserById) {
             return NextResponse.json({
                 status: 200,
                 message: 'User exists in database',
-                user: existingUserById
+                user: existingUserById,
+                connections: userConnections,
+                notifications: userNotifications,
             });
         } else {
             return NextResponse.json({
@@ -94,14 +119,19 @@ export async function GET(context: any) {
                 message: 'User not found in database'
             });
         }
+
     } catch (error) {
         return NextResponse.json({
             status: 501,
             message: 'Error getting user from database',
+            error: error,
         })
 
     }
 }
+
+
+
 
 
 
