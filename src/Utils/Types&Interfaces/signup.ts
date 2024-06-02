@@ -1,4 +1,5 @@
-export interface FormData {
+
+export interface FormDataType {
     firstname: string;
     lastname: string;
     email: string;
@@ -7,5 +8,5 @@ export interface FormData {
     country: string,
     specialization: string,
     level: string,
-    image: object
+    image: File | null
 }

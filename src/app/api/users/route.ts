@@ -7,6 +7,12 @@ import { promisify } from 'util';
 import { NextRequest, NextResponse } from "next/server";
 
 
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
 const prisma = new PrismaClient();
 const pump = promisify(pipeline);
 
@@ -25,16 +31,33 @@ function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
 }
 
 
-export async function POST(req: NextRequest, res: Response) {
+export async function POST(req: any, res: Response) {
     try {
 
         const formdata = await req.formData();
         console.log(formdata, 'fd')
 
 
-        console.log(typeof formdata.get('image'), 'body')
+        const file = formdata.get('image');
 
-        const file = formdata.get('image') as File;
+
+        console.log(typeof formdata.get('image'), 'body')
+        let timeStamp = Date.now();
+        let filePath = '';
+        let filePathdb = '';
+
+        if (typeof file === 'string') {
+            filePath = `./public/userImages/${timeStamp}${file}`;
+            filePathdb = `/public/userImages/${timeStamp}${file}`;
+        } else if (file || file.name) {
+            filePath = `./public/userImages/${timeStamp}${file!.name}`;
+            filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
+
+        }
+        else if (!file || !file.name) {
+            return NextResponse.json({ error: 'Image file is required', success: false });
+        }
+
         console.log(file, 'fild')
         // for (let image of formdata) {
         //     console.log(image + ":", formdata[image]);
@@ -42,10 +65,11 @@ export async function POST(req: NextRequest, res: Response) {
         //   console.log(JSON.parse(file), 'fildfghjkd')
 
 
-        let timeStamp = Date.now();
-        const filePath = `./public/userImages/${timeStamp}${file!.name}`;
-        const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
 
+        // const filePath = `./public/userImages/${timeStamp}${file!.name}`;
+        // const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
+
+        // await pump(file.stream(), fs.createWriteStream(filePath));
 
         const nodeReadableStream = toNodeReadable(file.stream());
         await pump(nodeReadableStream, fs.createWriteStream(filePath));
@@ -72,12 +96,12 @@ export async function POST(req: NextRequest, res: Response) {
         const newUser = await prisma.user.create({
             data: {
                 firstname: formdata.get('firstname') as string,
-                lastname: formdata.get('lastname')  as string ,
+                lastname: formdata.get('lastname') as string,
                 password: hashedPassword,
-                email: formdata.get('email')  as string,
-                country: formdata.get('country')  as string,
-                specialization: formdata.get('specialization')  as string,
-                level: formdata.get('level')  as string,
+                email: formdata.get('email') as string,
+                country: formdata.get('country') as string,
+                specialization: formdata.get('specialization') as string,
+                level: formdata.get('level') as string,
                 image: filePathdb
             }
         });
@@ -94,10 +118,10 @@ export async function POST(req: NextRequest, res: Response) {
             second: 'numeric',
             hour12: true
         });
-        
+
         console.log(formattedDate, 'formateed date');
 
-        
+
 
         const newNotification = await prisma.notification.create({
             data: {

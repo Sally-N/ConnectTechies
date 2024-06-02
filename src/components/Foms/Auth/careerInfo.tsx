@@ -37,11 +37,12 @@ const beforeUpload = (file: FileType) => {
     return isLt2M;
 };
 
-const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
+const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData}) => {
     const [country, setCountry] = useState('')
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState<string>();
     const options = useMemo(() => selectCountryList().getLabels(), [])
+
 
     const handleChange: UploadProps['onChange'] = (info) => {
         console.log('info', info)
@@ -54,11 +55,17 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
             getBase64(info.file.originFileObj as FileType, (url) => {
                 setLoading(false);
                 setImageUrl(url);
-                console.log('formDdfghjta', typeof info.file)
-
-                setFormData({ ...formData, image: info.fileList[0] })
+                setFormData({ ...formData, image: info.fileList[0].originFileObj as File })
+                console.log(formData.image, 'lkjhhjkl;lkjh')
             });
+            
+            // setFormData({...formData, image: info.fileList[0].originFileObj})
+
         }
+
+
+        
+
     };
 
     const uploadButton = (
@@ -223,8 +230,6 @@ const CareerInfoComponent: React.FC<Props> = ({ formData, setFormData }) => {
                                 showUploadList={false}
                                 beforeUpload={beforeUpload}
                                 onChange={handleChange}
-
-
                             >
                                 {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} /> : uploadButton}
                             </Upload>

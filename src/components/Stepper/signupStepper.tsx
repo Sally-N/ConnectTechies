@@ -23,8 +23,11 @@ export const SignUpStepperComponent = () => {
         country: '',
         specialization: '',
         level: '',
-        image: {}
+        image: null
     })
+
+    const [file, setFile] = useState<File | null>(null)
+
 
     async function handleSubmit() {
         if (current === 0) {
@@ -40,17 +43,19 @@ export const SignUpStepperComponent = () => {
 
         if (current === 1) {
             console.log('formDta', formData)
-            console.log('Dta',  formData.image)
+            console.log('Dta', formData.image)
 
-            
+
         }
 
-        const imageInfo = {image: formData.image as Blob}
+        const imageInfo = { image: formData.image }
+        // const file = formData.image.originFileObj;
 
-        try { 
+
+        try {
             const formDataToSend = new FormData();
             formDataToSend.append('firstname', formData.firstname);
-            console.log(formDataToSend, 'dfghjkl')          
+            console.log(formDataToSend, 'dfghjkl')
 
             formDataToSend.append('lastname', formData.lastname);
             formDataToSend.append('email', formData.email);
@@ -58,8 +63,15 @@ export const SignUpStepperComponent = () => {
             formDataToSend.append('country', formData.country);
             formDataToSend.append('level', formData.level);
             formDataToSend.append('specialization', formData.specialization);
-            formDataToSend.append('image', formData.image as File);
-            console.log(formDataToSend, 'dfghjkl')          
+            // formDataToSend.append('image', formData.image as unknown as File,  )
+
+            if (formData.image) {
+                formDataToSend.append('image', formData.image as File, ); // Append the file to the form data
+            }
+             for (var pair of formDataToSend.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+
+            }
 
 
             // Object.entries(formData).forEach(([key, value]) => {
@@ -93,9 +105,7 @@ export const SignUpStepperComponent = () => {
             console.log(error);
         }
 
-
-
-    }
+   }
 
 
     return (
@@ -106,7 +116,7 @@ export const SignUpStepperComponent = () => {
                     <Step title='Career Information' icon={<AuditOutlined />}></Step>
                 </Steps>
                 {current == 0 && <PersonalInfoComponent formData={formData} setFormData={setFormData} />}
-                {current == 1 && <CareerInfoComponent formData={formData} setFormData={setFormData} />}
+                {current == 1 && <CareerInfoComponent formData={formData}  setFormData={setFormData} />}
             </Col>
             <Row justify={current == 0 ? 'end' : 'space-between'} align={'middle'} style={{ width: '100%' }}>
                 {current == 1 && <Button type={'default'}

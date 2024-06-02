@@ -7,9 +7,10 @@ import { Row, Col, Input, Button, Grid } from "antd"
 import type { CheckboxProps } from 'antd';
 import Link from "next/link";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { FormData } from "@/Utils/Types&Interfaces/signup";
+import { FormDataType } from "@/Utils/Types&Interfaces/signup";
 import { useMediaQuery } from "react-responsive";
 import toast, { Toaster } from "react-hot-toast";
+import { File } from "buffer";
 
 
 const onChange: CheckboxProps['onChange'] = (e) => {
@@ -20,8 +21,9 @@ const { useBreakpoint } = Grid;
 
 
 export interface Props {
-    formData: FormData,
-    setFormData: React.Dispatch<React.SetStateAction<FormData>>
+    formData: FormDataType,
+    setFormData: React.Dispatch<React.SetStateAction<FormDataType>>
+    filestore: any
 }
 
 
