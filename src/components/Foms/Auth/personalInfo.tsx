@@ -23,7 +23,6 @@ const { useBreakpoint } = Grid;
 export interface Props {
     formData: FormDataType,
     setFormData: React.Dispatch<React.SetStateAction<FormDataType>>
-    filestore: any
 }
 
 

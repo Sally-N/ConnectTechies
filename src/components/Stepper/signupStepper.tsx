@@ -28,8 +28,14 @@ export const SignUpStepperComponent = () => {
 
     const [file, setFile] = useState<File | null>(null)
 
+    //// adjust buttons
+    ///change design
+    
 
-    async function handleSubmit() {
+
+    async function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        e.preventDefault();
+        
         if (current === 0) {
             if (formData.password !== formData.confirmPassword) {
                 console.log('Passwords do not match');
@@ -66,9 +72,9 @@ export const SignUpStepperComponent = () => {
             // formDataToSend.append('image', formData.image as unknown as File,  )
 
             if (formData.image) {
-                formDataToSend.append('image', formData.image as File, ); // Append the file to the form data
+                formDataToSend.append('image', formData.image as File,); // Append the file to the form data
             }
-             for (var pair of formDataToSend.entries()) {
+            for (var pair of formDataToSend.entries()) {
                 console.log(pair[0] + ', ' + pair[1]);
 
             }
@@ -86,26 +92,49 @@ export const SignUpStepperComponent = () => {
                 method: "POST",
                 body: formDataToSend
             });
-            // setFormData({
-            //     firstname: '',
-            //     lastname: '',
-            //     email: '',
-            //     password: '',
-            //     confirmPassword: '',
-            //     country: '',
-            //     level: '',
-            //     specialization: '',
-            //     image: '',
-            // });
-            // setCurrent(0);
-            // const result = response.body;
-            console.log("Success:", response);
-            // window.location.href = ('/login')
+
+            const result = await response.json();
+            const { status, message, user, notification } = result;
+
+            if (status == 201) {
+                setFormData({
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    country: '',
+                    level: '',
+                    specialization: '',
+                    image: null,
+                });
+                setCurrent(0);
+                toast.success('You have signed up successfully');
+                window.location.href = ('/login')
+
+            }
+            else {
+                setFormData({
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    country: '',
+                    level: '',
+                    specialization: '',
+                    image: null,
+                });
+                setCurrent(0);
+                toast.error('Unable to create account');
+            }
+
+            console.log("Success:", result);
         } catch (error) {
             console.log(error);
         }
 
-   }
+    }
 
 
     return (
@@ -116,7 +145,7 @@ export const SignUpStepperComponent = () => {
                     <Step title='Career Information' icon={<AuditOutlined />}></Step>
                 </Steps>
                 {current == 0 && <PersonalInfoComponent formData={formData} setFormData={setFormData} />}
-                {current == 1 && <CareerInfoComponent formData={formData}  setFormData={setFormData} />}
+                {current == 1 && <CareerInfoComponent formData={formData} setFormData={setFormData} />}
             </Col>
             <Row justify={current == 0 ? 'end' : 'space-between'} align={'middle'} style={{ width: '100%' }}>
                 {current == 1 && <Button type={'default'}

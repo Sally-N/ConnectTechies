@@ -20,6 +20,7 @@ const LoginComponent = () => {
    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const userObj = {email, password}
 
     const screens = useBreakpoint();
     const marginValues = {
@@ -38,6 +39,24 @@ const LoginComponent = () => {
         if (screens.sm) return marginValues.sm;
         return marginValues.xs; // default for xs and undefined
     };
+
+
+    async function handleSubmit(){
+
+        const response = await fetch('/api/login', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userObj)           
+        }) 
+        const result = await response.json();
+        console.log(result);
+
+    }
+
+
+
 
     return (
         <Row style={{ ...AuthFormStyle}}>
@@ -72,7 +91,7 @@ const LoginComponent = () => {
                     </Row>
         
                     <Row justify={'end'} align={'middle'}>
-                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }}>Next</Button>
+                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }} onClick={handleSubmit}>Next</Button>
                     </Row>
                 </form>
             </Col>

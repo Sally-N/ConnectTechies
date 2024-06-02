@@ -138,11 +138,14 @@ export async function POST(req: any, res: Response) {
             notification: newNotification
         })
 
+        
+
 
     } catch (error) {
         console.error('Error creating user:', error);
         return NextResponse.json({ error: 'Error creating user', success: false });
     }
+
 };
 
 

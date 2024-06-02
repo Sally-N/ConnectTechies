@@ -5,6 +5,7 @@ import { SignUpStepperComponent } from "@/components/Stepper/signupStepper";
 import { Col, Collapse, Row } from "antd";
 import { gradientBackground } from "@/components/Foms/Auth/form";
 import { useMediaQuery } from "react-responsive";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -19,6 +20,7 @@ export default function SignUpPage() {
     return (
         loaded && (
         <Row gutter={[8, 8]}>
+            <Toaster />
             <Col span={isSmallScreen ? 24 : 12}>
                 <SignUpStepperComponent />
             </Col>
