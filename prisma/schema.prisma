@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int            @id @unique @default(autoincrement())
+  email                String         @unique
+  firstname            String?
+  lastname             String?
+  password             String
+  specialization       String
+  level                String
+  country              String
+  image                String?
+  inititatedConnetions Connection[]   @relation("initiator")
+  acceptorConnetions   Connection[]   @relation("acceptor")
+  createdAt            DateTime       @default(now()) @map(name: "created_at")
+  updatedAt            DateTime       @updatedAt @map(name: "updated_at")
+  Notification         Notification[] @relation("user")
+  senderChats          Conversation[] @relation("sender")
+  recipientChats       Conversation[] @relation("recipient")
+}
+
+model Connection {
+  id          Int      @id @default(autoincrement())
+  initiator   User     @relation(name: "initiator", fields: [initiatorId], references: [id])
+  initiatorId Int
+  acceptor    User     @relation(name: "acceptor", fields: [acceptorId], references: [id])
+  acceptorId  Int
+  status      String
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(name: "user", fields: [userId], references: [id])
+  userId    Int
+  message   String
+  status    String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+}
+
+model Conversation {
+  id          Int      @id @default(autoincrement())
+  sender      User     @relation(name: "sender", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation(name: "recipient", fields: [recipientId], references: [id])
+  recipientId Int
+  body     String
+  read        Int @default(0)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
+}
