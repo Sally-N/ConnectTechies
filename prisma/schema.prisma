@@ -28,6 +28,8 @@ model User {
   createdAt            DateTime       @default(now()) @map(name: "created_at")
   updatedAt            DateTime       @updatedAt @map(name: "updated_at")
   Notification         Notification[] @relation("user")
+  senderChats          Conversation[] @relation("sender")
+  recipientChats       Conversation[] @relation("recipient")
 }
 
 model Connection {
@@ -49,4 +51,16 @@ model Notification {
   status    String
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+}
+
+model Conversation {
+  id          Int      @id @default(autoincrement())
+  sender      User     @relation(name: "sender", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation(name: "recipient", fields: [recipientId], references: [id])
+  recipientId Int
+  body     String
+  read        Int @default(0)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
 }
