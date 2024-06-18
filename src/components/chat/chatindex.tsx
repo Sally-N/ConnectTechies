@@ -20,6 +20,7 @@
 // export default ChatI;
 
 import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { Input, Row } from 'antd';
 import { useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
 
@@ -28,11 +29,9 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 const ChatInterfaceComponent = () => {
     useEffect(() => {
         const initializeSocket = async () => {
-            await fetch('/api/socket', {
-                method: "GET"
-            });
-
-
+            // await fetch('/api/socket', {
+            //     method: "GET"
+            // });
 
             socket = io('http://localhost:3000', {
                 path: "/socket.io",
@@ -69,7 +68,14 @@ const ChatInterfaceComponent = () => {
     }, []);
 
     return (
-        <p>Hello Chat</p>
+        <Row>
+            <Row>
+
+            </Row>
+            <Row>
+                <Input />
+            </Row>
+        </Row>
     );
 };
 
