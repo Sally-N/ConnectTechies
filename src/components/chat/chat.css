@@ -1,0 +1,29 @@
+.width-100 {
+    width: 100%;
+}
+
+
+.chatlist {
+    z-index: 10;
+    padding: 10px;
+    border: '1px solid a9aaaf';
+    min-height: 100vh;
+}
+
+.font-small {
+    font-size: 11px;
+}
+
+.background-white {
+    background-color: white;
+}
+
+.text-secondary {
+    /* color: #b8bbc7; */
+    color: #bfbfbf;
+}
+
+.font-regular {
+    font-size: 13px;
+  
+}
