@@ -1,46 +1,27 @@
-// import { useEffect } from 'react'
-// import io from 'socket.io-client'
-// let socket
-
-// const ChatI = () => {
-//   useEffect(() => socketInitializer(), [])
-
-//   const socketInitializer = async () => {
-//     await fetch('/api/socket')
-//     socket = io()
-
-//     socket.on('connect', () => {
-//       console.log('connected')
-//     })
-//   }
-
-//   return null
-// }
-
-// export default ChatI;
-
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { Input, Row } from 'antd';
-import { useEffect } from 'react';
+import { Button, Input, Row } from 'antd';
+import { read } from 'fs';
+import { FormEvent, useEffect, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 const ChatInterfaceComponent = () => {
+    const [chatMessage, setChatMessage] = useState('');
     useEffect(() => {
-        const initializeSocket = async () => {
+        // const initializeSocket = async (event: FormEvent<HTMLFormElement>) => {
+        async function initializeSocket(event: FormEvent<HTMLFormElement>) {
+
+            event.preventDefault
             // await fetch('/api/socket', {
             //     method: "GET"
             // });
+            const formData = new FormData(event.currentTarget);
 
             socket = io('http://localhost:3000', {
-                path: "/socket.io",
-                transports: ["websocket"],
+                // path: "/socket.io",
+                // transports: ["websocket"],
             });
-
-            const connection_timeout = setTimeout(function () {
-                socket.close()
-            }, 5000)
 
             socket.on('open', () => {
                 console.log("socket opened");
@@ -48,7 +29,6 @@ const ChatInterfaceComponent = () => {
 
             socket.on('connect', () => {
                 console.log('connected');
-                clearTimeout(connection_timeout)
             });
 
             socket.on('disconnect', () => {
@@ -63,9 +43,36 @@ const ChatInterfaceComponent = () => {
                 console.error('Socket Error:', error);
             });
         };
-
-        initializeSocket();
     }, []);
+
+
+    const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        socket = io('http://localhost:3001', {
+            path: "/socket.io",
+            transports: ["websocket"],
+        });
+
+        // socket.on('open', () => {
+        //     console.log("socket opened");
+        // })
+
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+
+        // Emit the message to the server
+        socket.emit('message', {
+            senderId: '20',
+            message: chatMessage,
+            receiver: '24',
+            read: 'sent',
+        });
+
+        // Clear the input field
+        setChatMessage('');
+    };
 
     return (
         <Row>
@@ -73,7 +80,10 @@ const ChatInterfaceComponent = () => {
 
             </Row>
             <Row>
-                <Input />
+                <form onSubmit={handleFormSubmit}>
+                    <Input value={chatMessage} onChange={(e) => (setChatMessage(e.target.value))} />
+                    <Button type="primary" htmlType="submit">Submit</Button>
+                </form>
             </Row>
         </Row>
     );
