@@ -70,6 +70,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const body = await req.json();
     const { chatId } = body;
+    console.log(chatId, 'id')
     const chat = await prisma.chat.findUnique({
       where: {
         id: chatId,
