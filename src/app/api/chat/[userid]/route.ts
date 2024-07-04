@@ -1,27 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
-import { message } from "antd";
 
-
+///find user chats
 
 export async function GET(req: NextRequest, context: any) {
-
     try {
         const { params } = context;
         const userId = params.userid;
         console.log(userId, 'userid')
 
-        const allChats = await prisma.conversation.findMany({
+        const allChats = await prisma.chat.findMany({
             where: {
-                senderId: userId
+                OR: [
+                    {
+                        recipientId: userId,
+                    },
+                    {
+                        senderId: userId,
+                    }
+                ]
             }
         })
-
         return NextResponse.json({
             status: 201,
-            message: ''
+            message: 'all user chats',
+            chats: allChats
         })
     } catch (error) {
+        console.log(error, 'error')
 
     }
 

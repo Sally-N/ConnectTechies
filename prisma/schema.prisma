@@ -28,8 +28,10 @@ model User {
   createdAt            DateTime       @default(now()) @map(name: "created_at")
   updatedAt            DateTime       @updatedAt @map(name: "updated_at")
   Notification         Notification[] @relation("user")
-  senderChats          Conversation[] @relation("sender")
-  recipientChats       Conversation[] @relation("recipient")
+  // senderChats          Conversation[] @relation("sender")
+  // recipientChats       Conversation[] @relation("recipient")
+  recipientChats       Chat[]         @relation("recipient")
+  senderChats          Chat[]         @relation("sender")
 }
 
 model Connection {
@@ -54,14 +56,32 @@ model Notification {
 }
 
 model Conversation {
+  id        Int      @id @default(autoincrement())
+  // sender      User     @relation(name: "sender", fields: [senderId], references: [id])
+  // senderId    Int
+  // recipient   User     @relation(name: "recipient", fields: [recipientId], references: [id])
+  // recipientId Int
+  message   String
+  read      Int      @default(0)
+  socketId  Int
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  // User      User?    @relation(fields: [userId], references: [id])
+  // userId    Int?
+  // User      User?    @relation(fields: [userId], references: [id])
+  // userId    Int?
+}
+
+model Chat {
   id          Int      @id @default(autoincrement())
   sender      User     @relation(name: "sender", fields: [senderId], references: [id])
   senderId    Int
   recipient   User     @relation(name: "recipient", fields: [recipientId], references: [id])
   recipientId Int
-  message     String
-  read        Int      @default(0)
-  socketId    Int
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @updatedAt @map(name: "updated_at")
+  //  User      User?    @relation(fields: [userId], references: [id])
+  // userId    Int?
+  // User      User?    @relation(fields: [userId], references: [id])
+  // userId    Int?
 }

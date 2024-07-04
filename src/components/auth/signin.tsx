@@ -61,7 +61,7 @@ export default function SComp() {
         <Row justify={'center'} align={'middle'}>
             <Col span={24} className="form-div">
                 <form style={{ padding: '20px' }} onSubmit={handleSignIn}>
-                    <Row style={{ margin: "0 0 10px" }}>
+                    {/* <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
                                 <span style={spanStyle}>*</span>Email address
@@ -82,10 +82,10 @@ export default function SComp() {
                                 value={password} onChange={(e) => setPassword(e.target.value)}
                                 aria-required="true" />
                         </Col>
-                    </Row>
+                    </Row> */}
 
-                    <Row justify={'end'} align={'middle'}>
-                        <Button type={'primary'} role="submit" onClick={() => signIn('Credentials')} style={{ ...SignUpButtonStyle, }}>Next</Button>
+                    <Row justify={'end'} align={'middle'} >
+                        <Button type={'primary'} role="submit" onClick={() => signIn('Credentials')} className="auth-button">Next</Button>
                     </Row>
 
                 </form>

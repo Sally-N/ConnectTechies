@@ -47,10 +47,6 @@ const authOptions = {
 
                 return {
                     existingUserByEmail
-                    // id: existingUserByEmail.id + "",
-                    // email: existingUserByEmail.email,
-                    // name: existingUserByEmail.firstname,
-                    // image: existingUserByEmail.image,
                 }
             }
         }),
