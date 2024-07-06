@@ -60,8 +60,9 @@ model Message {
   chatId    Int
   sender    User     @relation(name: "sender", fields: [senderId], references: [id])
   senderId  Int
+  text      String
   read      Int      @default(0)
-  socketId  Int
+  socketId  String
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
 }
