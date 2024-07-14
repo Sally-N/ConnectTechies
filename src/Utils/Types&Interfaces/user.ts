@@ -16,3 +16,17 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
   }
+
+  export interface UserUInterface {
+    id: number
+    email: string
+    firstname: string
+    lastname: string
+    password: string
+    specialization: string
+    level: string
+    country: string
+    image: string
+    createdAt: string
+    updatedAt: string
+  }

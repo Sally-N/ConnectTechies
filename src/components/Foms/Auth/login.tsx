@@ -5,8 +5,7 @@ import { AuthFormStyle } from "@/Utils/Theme/form";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button, Grid } from "antd"
 import type { CheckboxProps } from 'antd';
-import Link from "next/link";
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+
 
 
 const onChange: CheckboxProps['onChange'] = (e) => {

@@ -1,14 +1,11 @@
 // 'use client'
 
 import React, { FormEvent } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { Button, Col, Input, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import './auth.css';
-import { Paragraph, Title, Text } from "@/Utils/Theme/customTheme";
-import { spanStyle, styleText } from "@/Utils/Theme/styleText";
-import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
-import toast from "react-hot-toast";
+import Image from "next/image";
 
 // import { doSocialLogin } from "@/app/actions";
 
@@ -34,11 +31,12 @@ export default function SComp() {
 
 
         try {
-            const res = await signIn('credentials', {
+            const res = await signIn('login', {
                 redirect: false,
                 email: email,
                 password: password,
             })
+            // window.location.href = ('/chat')
 
 
             if (!res?.error) {
@@ -85,21 +83,21 @@ export default function SComp() {
                     </Row> */}
 
                     <Row justify={'end'} align={'middle'} >
-                        <Button type={'primary'} role="submit" onClick={() => signIn('Credentials')} className="auth-button">Next</Button>
+                        <Button onClick={() => signIn('google')} className="auth-button">
+                            <Image src="/google-icon-logo-svgrepo-com.svg" alt="google image" width={17} height={17} className="auth-img" />
+                            Login with Google
+                        </Button>
+                        <Button onClick={() => signIn('github')} className="auth-button">
+                            <Image src="/github-mark.svg" alt="google image" width={17} height={17} className="auth-img" />
+                            Login with Github
+                        </Button>
                     </Row>
 
                 </form>
                 {/* <form action={handleSignIn} className="auth-form">
                     <Title level={4} >ConnectTechies</Title>
                     <Paragraph>Access Expertise in Tech, Design, AI, and More - Anytime, Anywhere</Paragraph>
-                    <Button onClick={() => signIn('google')} className="auth-button">
-                        <Image src="/google-icon-logo-svgrepo-com.svg" alt="google image" width={17} height={17} className="auth-img" />
-                        Login with Google
-                    </Button>
-                    <Button onClick={() => signIn('github')} className="auth-button">
-                        <Image src="/github-mark.svg" alt="google image" width={17} height={17} className="auth-img" />
-
-                        Login with Github</Button>
+                    
                 </form> */}
 
             </Col>

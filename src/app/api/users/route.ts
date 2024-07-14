@@ -31,34 +31,38 @@ function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
 }
 
 
-export async function POST(req: any, res: Response) {
+export async function POST(req: NextRequest, res: Response) {
     try {
 
-        const formdata = await req.formData();
-        console.log(formdata, 'fd')
+        // const body = await req.json()
+
+        // console.log(JSON.parse(body))
+
+        const { firstName, lastName, email, password } = await req.json();
+        console.log(firstName, lastName, email, password, 'fd')
 
 
-        const file = formdata.get('image');
+        // const file = formdata.get('image');
 
 
-        console.log(typeof formdata.get('image'), 'body')
-        let timeStamp = Date.now();
-        let filePath = '';
-        let filePathdb = '';
+        // console.log(typeof formdata.get('image'), 'body')
+        // let timeStamp = Date.now();
+        // let filePath = '';
+        // let filePathdb = '';
 
-        if (typeof file === 'string') {
-            filePath = `./public/userImages/${timeStamp}${file}`;
-            filePathdb = `/public/userImages/${timeStamp}${file}`;
-        } else if (file || file.name) {
-            filePath = `./public/userImages/${timeStamp}${file!.name}`;
-            filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
+        // if (typeof file === 'string') {
+        //     filePath = `./public/userImages/${timeStamp}${file}`;
+        //     filePathdb = `/public/userImages/${timeStamp}${file}`;
+        // } else if (file || file.name) {
+        //     filePath = `./public/userImages/${timeStamp}${file!.name}`;
+        //     filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
 
-        }
-        else if (!file || !file.name) {
-            return NextResponse.json({ error: 'Image file is required', success: false });
-        }
+        // }
+        // else if (!file || !file.name) {
+        //     return NextResponse.json({ error: 'Image file is required', success: false });
+        // }
 
-        console.log(file, 'fild')
+        // console.log(file, 'fild')
         // for (let image of formdata) {
         //     console.log(image + ":", formdata[image]);
         // }
@@ -71,12 +75,12 @@ export async function POST(req: any, res: Response) {
 
         // await pump(file.stream(), fs.createWriteStream(filePath));
 
-        const nodeReadableStream = toNodeReadable(file.stream());
-        await pump(nodeReadableStream, fs.createWriteStream(filePath));
-        console.log(filePath, 'fp')
+        // const nodeReadableStream = toNodeReadable(file.stream());
+        // await pump(nodeReadableStream, fs.createWriteStream(filePath));
+        // console.log(filePath, 'fp')
 
 
-        const existingEmail = formdata.get('email') as string;
+        const existingEmail = email as string;
 
 
         const existingUserByEmail = await prisma.user.findUnique({
@@ -85,24 +89,29 @@ export async function POST(req: any, res: Response) {
 
         if (existingUserByEmail) {
             return NextResponse.json({
+                status: 500,
                 message: "user with email already exists"
             })
 
         }
 
-        const hashedPassword = await hash(formdata.get('password') as string, 10);
+        const hashedPassword = await hash(password as string, 10);
 
 
         const newUser = await prisma.user.create({
             data: {
-                firstname: formdata.get('firstname') as string,
-                lastname: formdata.get('lastname') as string,
-                password: hashedPassword,
-                email: formdata.get('email') as string,
-                country: formdata.get('country') as string,
-                specialization: formdata.get('specialization') as string,
-                level: formdata.get('level') as string,
-                image: filePathdb
+                firstname: firstName as string,
+                lastname: lastName as string,
+                password: hashedPassword as string,
+                email: email as string,
+                // country: '',
+                // specialization: '',
+                // image: '',
+                // level: ''
+                // country: formdata.get('country') as string,
+                // specialization: formdata.get('specialization') as string,
+                // level: formdata.get('level') as string,
+                // image: filePathdb
             }
         });
 
@@ -137,10 +146,6 @@ export async function POST(req: any, res: Response) {
             user: newUser,
             notification: newNotification
         })
-
-        
-
-
     } catch (error) {
         console.error('Error creating user:', error);
         return NextResponse.json({ error: 'Error creating user', success: false });

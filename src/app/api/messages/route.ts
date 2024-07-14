@@ -8,15 +8,14 @@ import prisma from "../../../../lib/prisma";
 
 export async function POST(req: NextRequest, res: NextResponse) {
     try {
-        const { chatId, senderUId, message, read, socketId } = await req.json();
+        const { chatId, senderUId, message, read } = await req.json();
 
         const newMessage = await prisma.message.create({
             data: {
                 chatId: chatId,
-                senderId: senderUId,
+                senderId: Number(senderUId),
                 text: message,
                 read: read,
-                socketId: socketId,
             }
         })
 

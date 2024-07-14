@@ -45,17 +45,18 @@ const Index = () => {
 
   useEffect(() => {
     // Listen for incoming messages
-    socket.on('chat message', (message ) => {
+    socket.on('chat message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
-        socket.off('chat message');
-      };
-    }, []);
+      socket.off('chat message');
+    };
+  }, []);
 
   const sendMessage = () => {
     socket.emit('chat message', newMessage);
+
     console.log(newMessage, 'nwm')
     setNewMessage('');
   };
@@ -68,12 +69,14 @@ const Index = () => {
           <div key={index}>{message}</div>
         ))}
       </div>
-      <input
-        type="text"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-      />
-      <button onClick={sendMessage}>Send</button>
+      <form>
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button onClick={sendMessage}>Send</button>
+      </form>
     </div>
   );
 };
