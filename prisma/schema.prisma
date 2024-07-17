@@ -39,7 +39,10 @@ model Profile {
   specialization String
   level          String
   country        String
-  image          String
+  image          String?
+  linkedInUrl    String?
+  portfolioUrl   String?
+  aboutBio       String?
 }
 
 model Connection {
