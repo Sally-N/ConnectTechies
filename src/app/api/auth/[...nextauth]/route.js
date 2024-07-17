@@ -42,7 +42,7 @@ const authOptions = {
                     id: existingUserByEmail.id + "",
                     email: existingUserByEmail.email,
                     name: existingUserByEmail.firstname,
-                    // image: existingUserByEmail.image,
+                    image: existingUserByEmail.image,
                 })
 
                 return {
