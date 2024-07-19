@@ -47,6 +47,7 @@ const RegisterComponent = () => {
             if (result.status == 500) {
                 toast.error('A user with this email already exists');
             } else {
+                toast.success('Sign Up was successful')
                 await signIn("credentials", {
                     email: email,
                     password: password,
@@ -55,7 +56,6 @@ const RegisterComponent = () => {
                 })
             }
 
-            toast.success('Sign Up was successful')
 
         } catch (error) {
             console.log(error, 'err')
