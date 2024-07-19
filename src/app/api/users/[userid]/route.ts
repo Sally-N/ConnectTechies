@@ -4,6 +4,7 @@ import { promisify } from 'util';
 const pump = promisify(pipeline);
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { profile } from 'console';
 
 
 
@@ -18,27 +19,6 @@ export async function POST(req: any, context: any, res: Response) {
         const userId = Number(params.userid);
 
 
-        console.log(userId, 'id')
-        console.log(formdata, 'fd')
-
-
-        console.log(typeof formdata.get('image'), 'body')
-
-        const file = formdata.get('image');
-        console.log(file, 'fild')
-        for (let image of formdata) {
-            console.log(image + ":", formdata[image]);
-        }
-        //   console.log(JSON.parse(file), 'fildfghjkd')
-
-
-        let timeStamp = Date.now();
-        const filePath = `./public/userImages/${timeStamp}${file!.name}`;
-        const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
-        await pump(file.stream(), fs.createWriteStream(filePath));
-
-
-
         const updateUser = await prisma.user.update({
             where: {
                 id: (userId)
@@ -46,11 +26,7 @@ export async function POST(req: any, context: any, res: Response) {
             data: {
                 firstname: formdata.get('country'),
                 lastname: formdata.get('specialization'),
-                // email: "",
-                // level: formdata.get('level'),
-                // image: filePathdb,
                 updatedAt: new Date(),
-
             }
         });
 
@@ -103,7 +79,22 @@ export async function GET(req: NextRequest, context: any) {
 
 
         const userNotifications = await prisma.notification.findMany({
-            where: {userId: userId},
+            where: { userId: userId },
+        });
+
+        const chats = await prisma.chat.findMany({
+            where: {
+                OR: [
+                    { senderId: userId },
+                    { recipientId: userId },
+                ]
+            },
+        })
+
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                userId: userId
+            }
         })
 
         if (existingUserById) {
@@ -113,6 +104,8 @@ export async function GET(req: NextRequest, context: any) {
                 user: existingUserById,
                 connections: userConnections,
                 notifications: userNotifications,
+                userChats: chats,
+                profile: userProfile,
             });
         } else {
             return NextResponse.json({
