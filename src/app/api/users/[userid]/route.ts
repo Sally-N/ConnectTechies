@@ -44,10 +44,11 @@ export async function POST(req: any, context: any, res: Response) {
                 id: (userId)
             },
             data: {
-                country: formdata.get('country'),
-                specialization: formdata.get('specialization'),
-                level: formdata.get('level'),
-                image: filePathdb,
+                firstname: formdata.get('country'),
+                lastname: formdata.get('specialization'),
+                // email: "",
+                // level: formdata.get('level'),
+                // image: filePathdb,
                 updatedAt: new Date(),
 
             }

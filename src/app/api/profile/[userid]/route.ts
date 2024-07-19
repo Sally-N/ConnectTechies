@@ -1,174 +1,164 @@
-// import { PrismaClient } from "@prisma/client";
-// import { hash } from 'bcrypt';
-// import { Readable } from 'stream';
-// var fs = require('fs');
-// import { pipeline } from 'stream';
-// import { promisify } from 'util';
-// import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { hash } from 'bcrypt';
+import { Readable } from 'stream';
+var fs = require('fs');
+import { pipeline } from 'stream';
+import { promisify } from 'util';
+import { NextRequest, NextResponse } from "next/server";
 
 
-// export const config = {
-//     api: {
-//         bodyParser: false,
-//     },
-// };
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
-// const prisma = new PrismaClient();
-// const pump = promisify(pipeline);
+const prisma = new PrismaClient();
+const pump = promisify(pipeline);
 
-// function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
-//     const reader = webReadable.getReader();
-//     return new Readable({
-//         async read() {
-//             const { done, value } = await reader.read();
-//             if (done) {
-//                 this.push(null);
-//             } else {
-//                 this.push(Buffer.from(value));
-//             }
-//         }
-//     });
-// }
-
-
-// export async function POST(req: NextRequest, res: Response) {
-//     try {
-
-//         // const body = await req.json()
-
-//         // console.log(JSON.parse(body))
-
-//         const { firstName, lastName, email, password } = await req.json();
-//         console.log(firstName, lastName, email, password, 'fd')
+function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
+    const reader = webReadable.getReader();
+    return new Readable({
+        async read() {
+            const { done, value } = await reader.read();
+            if (done) {
+                this.push(null);
+            } else {
+                this.push(Buffer.from(value));
+            }
+        }
+    });
+}
 
 
-//         // const file = formdata.get('image');
+export async function POST(req: any, context: any, res: Response) {
+    try {
+        const body = await req.formData();
+        const { params } = context;
+        const userId = Number(params.userid);
+        console.log(body, 'body');
+        // const { userId, country, specialization, level, image, linkedInUrl, portfolioUrl, aboutBio } = body;
+        // console.log(userId, country, specialization, level, image, linkedInUrl, portfolioUrl, aboutBio, 'fd')
 
 
-//         // console.log(typeof formdata.get('image'), 'body')
-//         // let timeStamp = Date.now();
-//         // let filePath = '';
-//         // let filePathdb = '';
-
-//         // if (typeof file === 'string') {
-//         //     filePath = `./public/userImages/${timeStamp}${file}`;
-//         //     filePathdb = `/public/userImages/${timeStamp}${file}`;
-//         // } else if (file || file.name) {
-//         //     filePath = `./public/userImages/${timeStamp}${file!.name}`;
-//         //     filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
-
-//         // }
-//         // else if (!file || !file.name) {
-//         //     return NextResponse.json({ error: 'Image file is required', success: false });
-//         // }
-
-//         // console.log(file, 'fild')
-//         // for (let image of formdata) {
-//         //     console.log(image + ":", formdata[image]);
-//         // }
-//         //   console.log(JSON.parse(file), 'fildfghjkd')
+        const file = body.get('image');
 
 
+        console.log(typeof body.get('image'), 'body')
+        let timeStamp = Date.now();
+        let filePathdb = null;
 
-//         // const filePath = `./public/userImages/${timeStamp}${file!.name}`;
-//         // const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
+        // if (typeof file === 'string') {
+        //     filePath = `./public/userImages/${timeStamp}${file}`;
+        //     filePathdb = `/public/userImages/${timeStamp}${file}`;
+        // } else if (file || file.name) {
+        //     filePath = `./public/userImages/${timeStamp}${file!.name}`;
+        //     filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
 
-//         // await pump(file.stream(), fs.createWriteStream(filePath));
+        // }
+        // else if (!file || !file.name) {
+        //     filePathdb
 
-//         // const nodeReadableStream = toNodeReadable(file.stream());
-//         // await pump(nodeReadableStream, fs.createWriteStream(filePath));
-//         // console.log(filePath, 'fp')
+        // }
+        if (file && typeof file !== 'string' && file.name) {
+            const filePath = `./public/userImages/${timeStamp}${file.name}`;
+            filePathdb = `/public/userImages/${timeStamp}${file.name}`;
+            const nodeReadableStream = toNodeReadable(file.stream());
+            await pump(nodeReadableStream, fs.createWriteStream(filePath));
+        }
 
-
-//         const existingEmail = email as string;
-
-
-//         const existingUserByEmail = await prisma.user.findUnique({
-//             where: { email: existingEmail },
-//         })
-
-//         if (existingUserByEmail) {
-//             return NextResponse.json({
-//                 status: 500,
-//                 message: "user with email already exists"
-//             })
-
-//         }
-
-//         const hashedPassword = await hash(password as string, 10);
-
-
-//         const newUser = await prisma.profile.create({
-//             data: {
-                
-//                 // firstname: firstName as string,
-//                 // lastname: lastName as string,
-//                 // password: hashedPassword as string,
-//                 // email: email as string,
-//                 userId: 4,
-//                 country: '',
-//                 specialization: '',
-//                 image: '',
-//                 level: '',
-//                 linkedInUrl: '',
-//                 portfolioUrl: '',
-//                 aboutBio: '',
-//                 // country: formdata.get('country') as string,
-//                 // specialization: formdata.get('specialization') as string,
-//                 // level: formdata.get('level') as string,
-//                 // image: filePathdb
-//             }
-//         });
-
-//         let date = new Date(newUser.createdAt);
-//         console.log(date, 'date');
-
-//         const formattedDate = date.toLocaleString('en-US', {
-//             year: 'numeric',
-//             month: 'long',
-//             day: 'numeric',
-//             hour: 'numeric',
-//             minute: 'numeric',
-//             second: 'numeric',
-//             hour12: true
-//         });
-
-//         console.log(formattedDate, 'formateed date');
+        // console.log(file, 'fild')
+        // for (let image of formdata) {
+        //     console.log(image + ":", formdata[image]);
+        // }
+        //   console.log(JSON.parse(file), 'fildfghjkd')
 
 
 
-//         const newNotification = await prisma.notification.create({
-//             data: {
-//                 userId: newUser.id,
-//                 status: 'unread',
-//                 message: 'Profile setup is complete',
-//             }
-//         })
+        // const filePath = `./public/userImages/${timeStamp}${file!.name}`;
+        // const filePathdb = `/public/userImages/${timeStamp}${file!.name}`;
 
-//         return NextResponse.json({
-//             status: 201,
-//             message: "User created successfully",
-//             user: newUser,
-//             notification: newNotification
-//         })
-//     } catch (error) {
-//         console.error('Error creating user:', error);
-//         return NextResponse.json({ error: 'Error creating user', success: false });
-//     }
+        // await pump(file.stream(), fs.createWriteStream(filePath));
 
-// };
+        // const nodeReadableStream = toNodeReadable(file.stream());
+        // await pump(nodeReadableStream, fs.createWriteStream(filePath));
+        // console.log(filePath, 'fp')
 
 
-// export async function GET(req: NextRequest) {
 
-//     const allUsers = await prisma.user.findMany();
+        const newUserProfile = await prisma.profile.update({
+            where: {
+                userId: userId,
+            },
+            data: {
+                // userId: Number(body.get('userId')),
+                country: body.get('country') || null,
+                specialization: body.get('specialization') || null,
+                image: filePathdb || null,
+                level: body.get('level') || null,
+                linkedInUrl: body.get('linkedInUrl') || null,
+                portfolioUrl: body.get('portfolioUrl') || null,
+                aboutBio: body.get('aboutBio') || null,
+                // country: formdata.get('country') as string,
+                // specialization: formdata.get('specialization') as string,
+                // level: formdata.get('level') as string,
+                // image: filePathdb
+            }
+        });
 
-//     return NextResponse.json({
-//         status: 201,
-//         message: 'All users in the database',
-//         users: allUsers
-//     })
-// }
+
+        const newNotification = await prisma.notification.create({
+            data: {
+                userId: newUserProfile.userId,
+                status: 'unread',
+                message: 'Profile setup is complete',
+            }
+        })
+
+        return NextResponse.json({
+            status: 201,
+            message: "User profile successfully",
+            user: newUserProfile,
+            notification: newNotification
+        })
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return NextResponse.json({
+            error: 'Error creating user',
+            success: false,
+            status: 500
+        });
+    }
+
+};
+
+
+export async function GET(req: NextRequest, context: any) {
+
+    const { params } = context;
+
+    const userId = Number(params.userid);
+
+    const userProfile = await prisma.profile.findUnique({
+        where: {
+            userId: userId,
+        }
+    });
+
+    if (!userProfile) {
+
+        return NextResponse.json({
+            status: 500,
+            message: 'User profile not found',
+        })
+    }
+
+    return NextResponse.json({
+        status: 201,
+        message: 'All users in the database',
+        users: userProfile
+    })
+}
 
 
 
