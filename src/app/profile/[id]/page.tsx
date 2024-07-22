@@ -2,10 +2,8 @@
 
 import React, { useEffect } from "react";
 import { Col, Row } from "antd";
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import UserProfileFormComponent from "@/components/Foms/profile";
-import UpdateUserTabComponent from "@/components/Tab/updateUserTab";
-
+import { usePathname, useSearchParams } from 'next/navigation'
+import ProfileSetupComponent from "@/components/Foms/profile";
 
 
 export default function Profile() {
@@ -24,19 +22,19 @@ export default function Profile() {
 
 
 
-// const router = useRouter();
-// const userId = router.query['id'];
-// console.log(userId, 'user')
-return (
-    <Row gutter={[8, 8]} style={{ height: '100vh' }}>
-        <Col span={24}>
-            <Row justify={'center'} align={'middle'}>
-                <UserProfileFormComponent />
-                <UpdateUserTabComponent />
+    // const router = useRouter();
+    // const userId = router.query['id'];
+    // console.log(userId, 'user')
+    return (
+
+            <Row gutter={[8, 8]} style={{ height: '100vh' }}>
+                <Col span={24}>
+                    <Row justify={'center'} align={'middle'}>
+                        <ProfileSetupComponent />
+                    </Row>
+                </Col>
+
+
             </Row>
-        </Col>
-
-
-    </Row>
-)
+    )
 }

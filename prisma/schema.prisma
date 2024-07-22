@@ -43,6 +43,7 @@ model Profile {
   linkedInUrl    String?
   portfolioUrl   String?
   aboutBio       String?
+  industries     String?
 }
 
 model Connection {

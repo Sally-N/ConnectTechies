@@ -61,13 +61,7 @@ const UpdateUserComponent = () => {
     return (
         <Row justify={'center'} align={'middle'}>
             <Col span={24}>
-                {/* <Row> */}
-                <Title level={3} style={{ textAlign: 'left', width: '100%', paddingBottom: '0px' }}>
-                    Create an account
-                </Title>
-                {/* </Row> */}
                 <form style={{ padding: '20px', alignContent: 'center', justifyContent: 'center' }} onSubmit={handleSubmit}>
-
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
@@ -76,7 +70,8 @@ const UpdateUserComponent = () => {
                             <Input placeholder="Enter email address" value={firstName} onChange={(e) => setFirstName(e.target.value)} required
                                 aria-required="true" />
                         </Col>
-                    </Row><Row style={{ margin: "0 0 10px" }}>
+                    </Row>
+                    <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
                                 Last Name
@@ -85,10 +80,7 @@ const UpdateUserComponent = () => {
                                 aria-required="true" />
                         </Col>
                     </Row>
-
-                    {/* <Row justify={'ce'} align={'middle'}> */}
-                    <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Update</Button>
-                    {/* </Row> */}
+                    <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Submit</Button>
                 </form>
             </Col>
         </Row>

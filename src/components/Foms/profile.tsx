@@ -37,7 +37,7 @@ const beforeUpload = (file: FileType) => {
     return isLt2M;
 };
 
-const UserProfileFormComponent: React.FC = () => {
+const ProfileSetupComponent: React.FC = () => {
     const [aboutBio, setAboutbio] = useState<string>('');
     const [linkedInUrl, setLinkedInUrl] = useState<string>('');
     const [portfolioUrl, setPortfolioUrl] = useState<string>('');
@@ -48,6 +48,7 @@ const UserProfileFormComponent: React.FC = () => {
     const [level, setLevel] = useState<string>('');
     const [specialization, setSpecialization] = useState<string>('')
     const options = useMemo(() => selectCountryList().getLabels(), [])
+    const [industries, setIndustries] = useState<String[]>([])
 
 
 
@@ -86,6 +87,10 @@ const UserProfileFormComponent: React.FC = () => {
         setCountry(country)
     }
 
+    function handleIndustriesChange(value: string[]){
+        setIndustries(value);
+    }
+
     const screens = useBreakpoint();
     const marginValues = {
         xs: "10px 10px",
@@ -116,6 +121,7 @@ const UserProfileFormComponent: React.FC = () => {
             formDataToSend.append('specialization', specialization);
             formDataToSend.append('level', level);
             formDataToSend.append('image', image!);
+            formDataToSend.append('industries', JSON.stringify(industries))
             formDataToSend.append('aboutBio', aboutBio);
             formDataToSend.append('linkedInUrl', linkedInUrl);
             formDataToSend.append('portfolioUrl', portfolioUrl);
@@ -290,7 +296,7 @@ const UserProfileFormComponent: React.FC = () => {
                                 style={{ width: '100%' }} />
                         </Col>
                     </Row>
-                    
+
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText} >
@@ -330,6 +336,32 @@ const UserProfileFormComponent: React.FC = () => {
                                 onChange={(value) => setLevel(value)}
 
                                 style={{ width: '100%' }} />
+                        </Col>
+                    </Row>
+                    <Row style={{ margin: "0 0 10px" }}>
+                        <Col span={24}>
+                            <Text style={styleText}>
+                                Industries you've worked in
+                            </Text>
+                            <Select
+                                mode="multiple"
+                                // defaultValue={['Technology']}
+                                placeholder="Filled"
+                                variant="filled"
+                                style={{ width: '100% ' }}
+                                options={[
+                                    { value: 'Technology', label: 'Technology' },
+                                    { value: 'Agriculture and Food', label: 'Agriculture and Food' },
+                                    { value: 'Education', label: 'Education' },
+                                    { value: 'Transport and Infrastructure', label: 'Transport and Infrastructure' },
+                                    { value: 'Music and Entertainment', label: 'Music and Entertainment' },
+                                    { value: 'Manufacturing and Engineering', label: 'Manufacturing and Engineering' },
+                                    { value: 'Trade and Commerce', label: 'Trade and Commerce' },
+                                    { value: 'Banking and Finance', label: 'Banking and Finance' },
+
+                                ]}
+                                onChange={handleIndustriesChange}
+                            />
                         </Col>
                     </Row>
                     <Row>
@@ -386,6 +418,6 @@ const UserProfileFormComponent: React.FC = () => {
     )
 }
 
-export default UserProfileFormComponent;
+export default ProfileSetupComponent;
 
 

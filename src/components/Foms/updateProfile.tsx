@@ -86,23 +86,6 @@ const UpdateUserProfileFormComponent: React.FC = () => {
         setCountry(country)
     }
 
-    const screens = useBreakpoint();
-    const marginValues = {
-        xs: "10px 10px",
-        sm: "10px 20px",
-        md: "20px 10px",
-        lg: "20px 20px",
-        xl: "20px 30px",
-    };
-
-    // Get the appropriate margin value based on the current screen size
-    const getMargin = () => {
-        if (screens.xl) return marginValues.xl;
-        if (screens.lg) return marginValues.lg;
-        if (screens.md) return marginValues.md;
-        if (screens.sm) return marginValues.sm;
-        return marginValues.xs; // default for xs and undefined
-    };
 
 
     async function handleSubmit() {

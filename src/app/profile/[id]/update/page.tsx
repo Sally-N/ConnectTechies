@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { Col, Row } from "antd";
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import UserProfileFormComponent from "@/components/Foms/profile";
+import UpdateUserTabComponent from "@/components/Tab/updateUserTab";
 import MainLayout from "@/app/mainlayout";
-import UpdateUserProfileFormComponent from "@/components/Foms/updateProfile";
 
 
 
@@ -30,15 +30,17 @@ export default function Profile() {
     // console.log(userId, 'user')
     return (
         <MainLayout>
+
             <Row gutter={[8, 8]} style={{ height: '100vh' }}>
-                <Col span={12}>
+                <Col span={24}>
                     <Row justify={'center'} align={'middle'}>
-                        <UpdateUserProfileFormComponent />
+                        <UpdateUserTabComponent />
                     </Row>
                 </Col>
 
 
             </Row>
         </MainLayout>
+
     )
 }
