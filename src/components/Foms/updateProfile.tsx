@@ -37,7 +37,7 @@ const beforeUpload = (file: FileType) => {
     return isLt2M;
 };
 
-const UserProfileFormComponent: React.FC = () => {
+const UpdateUserProfileFormComponent: React.FC = () => {
     const [aboutBio, setAboutbio] = useState<string>('');
     const [linkedInUrl, setLinkedInUrl] = useState<string>('');
     const [portfolioUrl, setPortfolioUrl] = useState<string>('');
@@ -200,12 +200,6 @@ const UserProfileFormComponent: React.FC = () => {
     return (
         <Row>
             <Col span={24}>
-                <Row>
-                    <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
-                        Set Up Your Profile
-                    </Title>
-                    <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
-                </Row>
                 <form style={{ padding: '20px', zIndex: 10, border: 'solid 1px #8c8c8c' }} encType="multipart/form-data">
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
@@ -227,7 +221,8 @@ const UserProfileFormComponent: React.FC = () => {
                             <Text style={styleText}>
                                 Specialization
                             </Text>
-                            <Select options={
+                            <Input placeholder="Product Manager" value={specialization} onChange={(e) => e.target.value} />
+                            {/* <Select options={
                                 [
                                     {
                                         value: 'Mobile Developer',
@@ -287,16 +282,16 @@ const UserProfileFormComponent: React.FC = () => {
                                 value={specialization}
                                 onChange={(value) => setSpecialization(value)}
 
-                                style={{ width: '100%' }} />
+                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
-                    
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText} >
                                 Level of profession
                             </Text>
-                            <Select options={
+                            <Input value={level} onChange={(e) => e.target.value} />
+                            {/* <Select options={
                                 [
                                     {
                                         value: 'Beginner',
@@ -329,7 +324,7 @@ const UserProfileFormComponent: React.FC = () => {
                                 value={level}
                                 onChange={(value) => setLevel(value)}
 
-                                style={{ width: '100%' }} />
+                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
                     <Row>
@@ -361,6 +356,32 @@ const UserProfileFormComponent: React.FC = () => {
                             <TextArea rows={4} value={aboutBio} onChange={(e) => setAboutbio(e.target.value)} />
                         </Col>
                     </Row>
+                    <Row style={{ margin: '0 0 10px' }}>
+                        <Col span={24}>
+                            <Text style={styleText}>
+                                Industries
+                            </Text>
+                            <Select
+                                mode="multiple"
+                                defaultValue={['Technology']}
+                                placeholder="Filled"
+                                variant="filled"
+                                style={{ width: '100% ' }}
+                                options={[
+                                    { value: 'Technology', label: 'Technology' },
+                                    { value: 'Agriculture and Food', label: 'Agriculture and Food' },
+                                    { value: 'Education', label: 'Education' },
+                                    { value: 'Transport and Infrastructure', label: 'Transport and Infrastructure' },
+                                    { value: 'Music and Entertainment', label: 'Music and Entertainment' },
+                                    { value: 'Manufacturing and Engineering', label: 'Manufacturing and Engineering' },
+                                    { value: 'Trade and Commerce', label: 'Trade and Commerce' },
+                                    { value: 'Banking and Finance', label: 'Banking and Finance' },
+
+                                ]}
+                            />
+                        </Col>
+
+                    </Row>
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>
@@ -386,6 +407,6 @@ const UserProfileFormComponent: React.FC = () => {
     )
 }
 
-export default UserProfileFormComponent;
+export default UpdateUserProfileFormComponent;
 
 

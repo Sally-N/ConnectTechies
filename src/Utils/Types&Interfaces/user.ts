@@ -23,10 +23,10 @@ export interface User {
     firstname: string
     lastname: string
     password: string
-    specialization: string
-    level: string
-    country: string
-    image: string
+    // specialization: string
+    // level: string
+    // country: string
+    // image: string
     createdAt: string
     updatedAt: string
   }

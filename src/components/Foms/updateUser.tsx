@@ -9,13 +9,11 @@ import { useRouter } from "next/navigation";
 import { UserUInterface } from "@/Utils/Types&Interfaces/user";
 
 
-const RegisterComponent = () => {
+const UpdateUserComponent = () => {
     const [newuser, setNewUser] = useState<UserUInterface>();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
 
     const router = useRouter();
 
@@ -24,17 +22,7 @@ const RegisterComponent = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!password.match(passwordPattern)) {
-            toast.error('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            toast.error('Password and Confirm Password do not match');
-            return;
-        }
-
-        const userObj = { firstName, lastName, email, password }
+        const userObj = { firstName, lastName }
         console.log(userObj, 'usero')
 
         try {
@@ -98,36 +86,8 @@ const RegisterComponent = () => {
                         </Col>
                     </Row>
 
-                    <Row style={{ margin: "0 0 10px" }}>
-                        <Col span={24}>
-                            <Text style={styleText}>
-                                Email address
-                            </Text>
-                            <Input placeholder="Enter email address" value={email} onChange={(e) => setEmail(e.target.value)} required
-                                aria-required="true" />
-                        </Col>
-                    </Row>
-                    <Row style={{ margin: "0 0 10px" }}>
-                        <Col span={24}>
-                            <Text style={styleText}>
-                                Password
-                            </Text>
-                            <Input.Password placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                                aria-required="true" />
-                        </Col>
-                    </Row>
-                    <Row style={{ margin: "0 0 10px" }}>
-                        <Col span={24}>
-                            <Text style={styleText}>
-                                Confirm Password
-                            </Text>
-                            <Input.Password placeholder="Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required
-                                aria-required="true" />
-                        </Col>
-                    </Row>
-
                     {/* <Row justify={'ce'} align={'middle'}> */}
-                    <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Sign Up</Button>
+                    <Button type={'primary'} htmlType={'submit'} style={{ ...SignUpButtonStyle, }}>Update</Button>
                     {/* </Row> */}
                 </form>
             </Col>
@@ -136,4 +96,4 @@ const RegisterComponent = () => {
     )
 }
 
-export default RegisterComponent;
+export default UpdateUserComponent;
