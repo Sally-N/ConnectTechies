@@ -4,13 +4,13 @@ import { Title, Text } from "@/Utils/Theme/customTheme";
 import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button } from "antd"
 import toast from "react-hot-toast";
-import { signIn } from 'next-auth/react'; // Import signIn from next-auth/react
 import { useRouter } from "next/navigation";
 import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import CryptoJS from "crypto-js";
+
 
 
 const RegisterComponent = () => {
-    const [newuser, setNewUser] = useState<UserUInterface>();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('');
@@ -49,10 +49,14 @@ const RegisterComponent = () => {
             if (result.status == 500) {
                 toast.error('A user with this email already exists');
             } else {
-                // setNewUser(result.user)
+                sessionStorage.setItem("user", JSON.stringify(result.user))
+              console.log(sessionStorage.getItem("user"));
+
                 toast.success('Sign Up was successful');
                 console.log(result.user);
-                router.push(`/profile/${result.user.id}`)
+                console.log(result.user.id)
+                router.push(`/profile`);
+                // router.push(`/profile/${result.user.id}`)
 
                 // await signIn("credentials", {
                 //     email: email,

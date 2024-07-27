@@ -7,6 +7,10 @@ import selectCountryList from "react-select-country-list";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
+import { useRouter, usePathname } from "next/navigation";
+import CryptoJS from "crypto-js";
+import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+
 
 const { TextArea } = Input;
 
@@ -37,7 +41,13 @@ const beforeUpload = (file: FileType) => {
     return isLt2M;
 };
 
-const ProfileSetupComponent: React.FC = () => {
+type ProfileSetupComponentProps = {
+    user: UserUInterface;
+};
+
+const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) => {
+    const userId = user.id;
+    console.log('userid', userId);
     const [aboutBio, setAboutbio] = useState<string>('');
     const [linkedInUrl, setLinkedInUrl] = useState<string>('');
     const [portfolioUrl, setPortfolioUrl] = useState<string>('');
@@ -49,8 +59,6 @@ const ProfileSetupComponent: React.FC = () => {
     const [specialization, setSpecialization] = useState<string>('')
     const options = useMemo(() => selectCountryList().getLabels(), [])
     const [industries, setIndustries] = useState<String[]>([])
-
-
 
 
     const handleChange: UploadProps['onChange'] = (info) => {
@@ -87,7 +95,7 @@ const ProfileSetupComponent: React.FC = () => {
         setCountry(country)
     }
 
-    function handleIndustriesChange(value: string[]){
+    function handleIndustriesChange(value: string[]) {
         setIndustries(value);
     }
 
@@ -116,6 +124,8 @@ const ProfileSetupComponent: React.FC = () => {
             const formDataToSend = new FormData();
             // formDataToSend.append('userId', userId);
             console.log(formDataToSend, 'dfghjkl')
+            // formDataToSend.append('userId', userId.toString());
+            formDataToSend.append('userId', '37');
 
             formDataToSend.append('country', country);
             formDataToSend.append('specialization', specialization);
@@ -126,23 +136,7 @@ const ProfileSetupComponent: React.FC = () => {
             formDataToSend.append('linkedInUrl', linkedInUrl);
             formDataToSend.append('portfolioUrl', portfolioUrl);
 
-            // formDataToSend.append('image', formData.image as unknown as File,  )
-
-            // if (formData.image) {
-            //     formDataToSend.append('image', formData.image as File,); // Append the file to the form data
-            // }
-            // for (var pair of formDataToSend.entries()) {
-            //     console.log(pair[0] + ', ' + pair[1]);
-
-            // }
-
-
-            // Object.entries(formData).forEach(([key, value]) => {
-            //     formDataToSend.append(key, !value); // Voilà, an item is packed.
-            //     // if (value instanceof File) {
-            //     //     formDataToSend.append(key, value, value.name);
-            //     // }
-            //   });
+        
 
             console.log(formDataToSend, 'fssss')
             const response = await fetch('/api/profile', {
@@ -151,40 +145,7 @@ const ProfileSetupComponent: React.FC = () => {
             });
 
             const result = await response.json();
-            console.log(result)
-
-            // if (status == 201) {
-            //     setFormData({
-            //         firstname: '',
-            //         lastname: '',
-            //         email: '',
-            //         password: '',
-            //         confirmPassword: '',
-            //         country: '',
-            //         level: '',
-            //         specialization: '',
-            //         image: null,
-            //     });
-            //     setCurrent(0);
-            //     toast.success('You have signed up successfully');
-            //     window.location.href = ('/login')
-
-            // }
-            // else {
-            //     setFormData({
-            //         firstname: '',
-            //         lastname: '',
-            //         email: '',
-            //         password: '',
-            //         confirmPassword: '',
-            //         country: '',
-            //         level: '',
-            //         specialization: '',
-            //         image: null,
-            //     });
-            //     setCurrent(0);
-            //     toast.error('Unable to create account');
-            // }
+            console.log(result);
 
             console.log("Success:", result);
         } catch (error) {
@@ -233,7 +194,9 @@ const ProfileSetupComponent: React.FC = () => {
                             <Text style={styleText}>
                                 Specialization
                             </Text>
-                            <Select options={
+                            <Input placeholder="e.g: Start-Up Founder" value={specialization} onChange={(e) => setSpecialization(e.target.value)} />
+
+                            {/* <Select options={
                                 [
                                     {
                                         value: 'Mobile Developer',
@@ -293,7 +256,7 @@ const ProfileSetupComponent: React.FC = () => {
                                 value={specialization}
                                 onChange={(value) => setSpecialization(value)}
 
-                                style={{ width: '100%' }} />
+                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
 
@@ -302,7 +265,9 @@ const ProfileSetupComponent: React.FC = () => {
                             <Text style={styleText} >
                                 Level of profession
                             </Text>
-                            <Select options={
+                            <Input placeholder="e.g senior" value={level} onChange={(e) => setLevel(e.target.value)} />
+
+                            {/* <Select options={
                                 [
                                     {
                                         value: 'Beginner',
@@ -335,7 +300,7 @@ const ProfileSetupComponent: React.FC = () => {
                                 value={level}
                                 onChange={(value) => setLevel(value)}
 
-                                style={{ width: '100%' }} />
+                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -346,7 +311,6 @@ const ProfileSetupComponent: React.FC = () => {
                             <Select
                                 mode="multiple"
                                 // defaultValue={['Technology']}
-                                placeholder="Filled"
                                 variant="filled"
                                 style={{ width: '100% ' }}
                                 options={[
