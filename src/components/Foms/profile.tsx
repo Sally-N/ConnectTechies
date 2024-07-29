@@ -1,15 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { Title, Text } from "@/Utils/Theme/customTheme";
-import { styleText, spanStyle } from "@/Utils/Theme/styleText";
+import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button, Grid, Select } from "antd"
 import type { CheckboxProps } from 'antd';
 import selectCountryList from "react-select-country-list";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
-import { useRouter, usePathname } from "next/navigation";
-import CryptoJS from "crypto-js";
 import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import toast from "react-hot-toast";
 
 
 const { TextArea } = Input;
@@ -29,21 +28,17 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
 };
 
 const beforeUpload = (file: FileType) => {
-    // const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    // if (!isJpgOrPng) {
-    //     message.error('You can only upload JPG/PNG file!');
-    // }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
         message.error('Image must smaller than 2MB!');
     }
-    // return isJpgOrPng && isLt2M;
     return isLt2M;
 };
 
 type ProfileSetupComponentProps = {
     user: UserUInterface;
 };
+
 
 const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) => {
     const userId = user.id;
@@ -69,12 +64,9 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
         }
         if (info.file.status === 'done') {
             setImage(info.fileList[0].originFileObj as File);
-            // Get this url from response in real world.
             getBase64(info.file.originFileObj as FileType, (url) => {
                 setLoading(false);
                 setImageUrl(url);
-                // setFormData({ ...formData, image: info.fileList[0].originFileObj as File })
-                // console.log(formData.image, 'lkjhhjkl;lkjh')
             });
 
         }
@@ -99,34 +91,12 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
         setIndustries(value);
     }
 
-    const screens = useBreakpoint();
-    const marginValues = {
-        xs: "10px 10px",
-        sm: "10px 20px",
-        md: "20px 10px",
-        lg: "20px 20px",
-        xl: "20px 30px",
-    };
-
-    // Get the appropriate margin value based on the current screen size
-    const getMargin = () => {
-        if (screens.xl) return marginValues.xl;
-        if (screens.lg) return marginValues.lg;
-        if (screens.md) return marginValues.md;
-        if (screens.sm) return marginValues.sm;
-        return marginValues.xs; // default for xs and undefined
-    };
 
 
     async function handleSubmit() {
-
         try {
             const formDataToSend = new FormData();
-            // formDataToSend.append('userId', userId);
-            console.log(formDataToSend, 'dfghjkl')
-            // formDataToSend.append('userId', userId.toString());
-            formDataToSend.append('userId', '37');
-
+            formDataToSend.append('userId', userId.toString());
             formDataToSend.append('country', country);
             formDataToSend.append('specialization', specialization);
             formDataToSend.append('level', level);
@@ -135,9 +105,6 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
             formDataToSend.append('aboutBio', aboutBio);
             formDataToSend.append('linkedInUrl', linkedInUrl);
             formDataToSend.append('portfolioUrl', portfolioUrl);
-
-        
-
             console.log(formDataToSend, 'fssss')
             const response = await fetch('/api/profile', {
                 method: "POST",
@@ -145,22 +112,16 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
             });
 
             const result = await response.json();
-            console.log(result);
+            if (result.status == 500) {
+                toast.error('Error creating user profile')
+            }
 
+            toast.success("User created successfully")
             console.log("Success:", result);
         } catch (error) {
             console.log(error);
         }
 
-        const response = await fetch('/api/login', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-
-        })
-        const result = await response.json();
-        console.log(result);
 
     }
 
@@ -196,67 +157,6 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
                             </Text>
                             <Input placeholder="e.g: Start-Up Founder" value={specialization} onChange={(e) => setSpecialization(e.target.value)} />
 
-                            {/* <Select options={
-                                [
-                                    {
-                                        value: 'Mobile Developer',
-                                        label: 'Mobile Developer'
-                                    },
-                                    {
-                                        value: 'Web developer',
-                                        label: 'Web Developer',
-                                    },
-                                    {
-                                        value: 'Frontend Developer',
-                                        label: 'Frontend Developer',
-                                    },
-                                    {
-                                        value: 'Backend Developer',
-                                        label: 'Backend Developer',
-
-                                    },
-                                    {
-                                        value: 'FullStack Developer',
-                                        label: 'Fullstack Developer'
-                                    },
-                                    {
-                                        value: 'DevOps Developer',
-                                        label: 'DevOps Developer',
-                                    },
-                                    {
-                                        value: 'UI/UX Designer',
-                                        label: 'UI/UX Designer',
-                                    },
-                                    {
-                                        value: 'Cyber Security',
-                                        label: 'Cyber Security',
-                                    },
-                                    {
-                                        value: 'Technical Writer',
-                                        label: 'Technical Writer',
-                                    },
-                                    {
-                                        value: 'DevOps Developer',
-                                        label: 'DevOps Developer',
-                                    },
-                                    {
-                                        value: 'Cloud Engineer',
-                                        label: 'Cloud Engineer',
-                                    },
-                                    {
-                                        value: 'Data Scientist',
-                                        label: 'Data Scientist',
-                                    },
-                                    {
-                                        value: 'Network Engineer',
-                                        label: 'Network Engineer',
-                                    }
-                                ]
-                            }
-                                value={specialization}
-                                onChange={(value) => setSpecialization(value)}
-
-                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
 
@@ -267,40 +167,6 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
                             </Text>
                             <Input placeholder="e.g senior" value={level} onChange={(e) => setLevel(e.target.value)} />
 
-                            {/* <Select options={
-                                [
-                                    {
-                                        value: 'Beginner',
-                                        label: 'Beginner'
-                                    },
-                                    {
-                                        value: 'Intern',
-                                        label: 'Intern',
-                                    },
-                                    {
-                                        value: 'Student',
-                                        label: 'Student',
-                                    },
-                                    {
-                                        value: 'Intermediate',
-                                        label: 'Intermediate'
-                                    },
-                                    {
-                                        value: 'Advanced',
-                                        label: 'Advanced',
-
-                                    },
-
-                                    {
-                                        value: 'Expert',
-                                        label: 'Expert',
-                                    }
-                                ]
-                            }
-                                value={level}
-                                onChange={(value) => setLevel(value)}
-
-                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -310,7 +176,6 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
                             </Text>
                             <Select
                                 mode="multiple"
-                                // defaultValue={['Technology']}
                                 variant="filled"
                                 style={{ width: '100% ' }}
                                 options={[
@@ -345,10 +210,6 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
                             </Upload>
                         </Col>
                     </Row>
-                    {/* <Row justify={'space-between'} align={'middle'}>
-                        <Button type={'default'}>Previous</Button>
-                        <Button type={'primary'} style={{ ...SignUpButtonStyle }}>Submit</Button>
-                    </Row> */}
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText} >
