@@ -4,6 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import NavbarComponent from '@/components/navigation/navbar';
 import SidemenuComponent from '@/components/navigation/sidemenu';
 import './globals.css'
+import { UserProvider } from '@/Utils/Context/userContext';
 
 const { Header, Sider, Content } = Layout;
 
@@ -44,30 +45,32 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         loaded && (
             <Layout style={{ ...layoutStyle }}>
-                <Header style={{
-                    ...headerStyle, padding: '0px',
-                }}>
-                    <NavbarComponent />
-                </Header>
-                <Layout style={{
-                    width: '100%',
-                    height: 'fit-content',
-                    //  border: 'solid 10px green',
-                     minHeight: '200vh'
-                }}>
-                    <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
-                    >
-                        <SidemenuComponent />
-                    </Sider>
-                    <Content style={{
-                        padding: isSmallerScreen ? '25px' : '10px',
-                        width: '100%',
-                        overflowY: 'auto'
+                <UserProvider>
+                    <Header style={{
+                        ...headerStyle, padding: '0px',
                     }}>
+                        <NavbarComponent />
+                    </Header>
+                    <Layout style={{
+                        width: '100%',
+                        height: 'fit-content',
+                        //  border: 'solid 10px green',
+                        minHeight: '200vh'
+                    }}>
+                        <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+                        >
+                            <SidemenuComponent />
+                        </Sider>
+                        <Content style={{
+                            padding: isSmallerScreen ? '25px' : '10px',
+                            width: '100%',
+                            overflowY: 'auto'
+                        }}>
 
-                        {children}
-                    </Content>
-                </Layout>
+                            {children}
+                        </Content>
+                    </Layout>
+                </UserProvider>
             </Layout>
         )
     );

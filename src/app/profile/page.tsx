@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import ProfileSetupComponent from "@/components/Foms/profile";
-import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import {  User } from "@/Utils/Types&Interfaces/user";
 
 
 export default function Profile() {
-    const [user, setUser] = useState<UserUInterface>()
+    const [user, setUser] = useState<User>()
     useEffect(() => {
         const userDetails = (sessionStorage.getItem('user'))
 

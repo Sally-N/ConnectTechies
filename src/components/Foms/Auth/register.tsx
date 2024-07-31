@@ -5,7 +5,7 @@ import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button } from "antd"
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import { User } from "@/Utils/Types&Interfaces/user";
 import CryptoJS from "crypto-js";
 
 

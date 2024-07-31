@@ -7,8 +7,9 @@ import selectCountryList from "react-select-country-list";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
-import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import { User } from "@/Utils/Types&Interfaces/user";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 
 const { TextArea } = Input;
@@ -36,8 +37,11 @@ const beforeUpload = (file: FileType) => {
 };
 
 type ProfileSetupComponentProps = {
-    user: UserUInterface;
+    user: User;
 };
+
+
+const router = useRouter();
 
 
 const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) => {
@@ -117,6 +121,9 @@ const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) =
             }
 
             toast.success("User created successfully")
+            router.push('/login');
+
+
             console.log("Success:", result);
         } catch (error) {
             console.log(error);

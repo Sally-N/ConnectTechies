@@ -1,43 +1,38 @@
-import { createContext, useState } from "react";
-import { AllUsers, User } from "../Types&Interfaces/user";
+import React, { PropsWithChildren } from "react";
+import { createContext, useState, useContext } from "react";
+import { AllUsers, MyUser } from "../Types&Interfaces/user";
 
 
-
-
-
-export interface IAllUsersContext {
-    allUsers: AllUsers | null;
-}
-
-export const allUsersContext: IAllUsersContext = {
-    allUsers: null,
-
+type UserContextType = {
+    user: MyUser | undefined,
+    setUser: (user: MyUser | undefined) => void;
 }
 
 
-export const UsersAllContext = createContext<IAllUsersContext>(allUsersContext);
+export const UserContext = createContext<UserContextType | undefined>(undefined)
 
 
-
-
-export const UsersProvider = ({
-    childrenElements,
-}: {
-    childrenElements: React.ReactNode,
-
-}) => {
-
-    const [allUsers, setAllUsers] = useState<AllUsers | null>(null);
-
+export const UserProvider = ({ children }: PropsWithChildren<{}> ) => {
+    const [user, setUser] = useState<MyUser | undefined>(undefined);
     return (
-        <UsersAllContext.Provider
-        value={{
-            allUsers: allUsers
-        }}>
-            {childrenElements}
-        </UsersAllContext.Provider>
+        <UserContext.Provider value={{ user, setUser }}>
+            {children}
+        </UserContext.Provider>
     )
-
 }
+
+
+export const useUserContext = () => {
+    const context = useContext(UserContext);
+   
+    if (!context) {
+      throw new Error("useThemeContext must be used inside the ThemeProvider");
+    }
+   
+    return context;
+  };
+
+
+
 
 
