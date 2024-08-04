@@ -95,16 +95,16 @@ export async function POST(req: any, res: Response) {
 };
 
 
-// export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest) {
 
-//     const allUsers = await prisma.user.findMany();
+    const allUsersProfiles = await prisma.profile.findMany();
 
-//     return NextResponse.json({
-//         status: 201,
-//         message: 'All users in the database',
-//         users: allUsers
-//     })
-// }
+    return NextResponse.json({
+        status: 201,
+        message: 'All user Profile in the database',
+        userProfiles: allUsersProfiles
+    })
+}
 
 
 

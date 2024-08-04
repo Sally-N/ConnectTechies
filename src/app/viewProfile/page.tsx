@@ -9,7 +9,7 @@ import MainLayout from "@/app/mainlayout";
 
 
 
-export default function V() {
+export default function ViewProfile() {
 
     const pathname = usePathname()
     const searchParams = useSearchParams()
