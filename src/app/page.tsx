@@ -1,14 +1,16 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import UserCards from '@/components/cards/user'
-import { Col, Row } from 'antd'
-import MainLayout from './mainlayout'
 import { User } from '@/Utils/Types&Interfaces/user';
 import { useState } from 'react';
+import { CookiesProvider, useCookies } from 'react-cookie';
+import HomePage from './home/page';
+import LoginUserPage from './login/page';
 
-export default function Home() {
+export default function AppPage() {
   const [users, setAllUsers] = useState<User[]>([]);
+  const [cookies, setCookie] = useCookies(['user'])
+
 
   const getData = async () => {
     try {
@@ -30,10 +32,16 @@ export default function Home() {
     getData();
   }, [])
 
+  console.log(cookies.user, 'cook')
+
+
+
 
   return (
-    <MainLayout>
-      <UserCards users={users} />
-    </MainLayout>
+    <CookiesProvider>
+      <div>
+        {cookies.user ? <HomePage/> :  <LoginUserPage />}
+      </div>
+    </CookiesProvider>
   )
 }

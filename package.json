@@ -30,7 +30,6 @@
     "next-connect": "^1.0.0",
     "promisify": "^0.0.3",
     "react": "18.2.0",
-    "react-cookie": "^7.1.4",
     "react-dom": "18.2.0",
     "react-hash-control": "^1.0.3",
     "react-hot-toast": "^2.4.1",

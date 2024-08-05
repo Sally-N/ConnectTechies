@@ -1,23 +1,31 @@
 import React, { FormEvent, useState, useEffect } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
-import { Title, Text } from "@/Utils/Theme/customTheme";
+import { Text } from "@/Utils/Theme/customTheme";
 import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button } from "antd"
 import toast from "react-hot-toast";
-import { signIn } from 'next-auth/react'; // Import signIn from next-auth/react
-import { useRouter } from "next/navigation";
-import { UserUInterface } from "@/Utils/Types&Interfaces/user";
+import { MyUser } from "@/Utils/Types&Interfaces/user";
+import { useCookies } from "react-cookie";
 
 
 const UpdateUserComponent = () => {
-    const [newuser, setNewUser] = useState<UserUInterface>();
+    const [cookies, setCookie ]= useCookies(['user']);
+
+    const [newuser, setNewUser] = useState<MyUser>();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('');
 
-    const router = useRouter();
 
-    let passwordPattern = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+
+
+
+    useEffect(() => {
+        setNewUser(cookies.user);
+    })
+
+
+    console.log(cookies.user)
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -25,8 +33,10 @@ const UpdateUserComponent = () => {
         const userObj = { firstName, lastName }
         console.log(userObj, 'usero')
 
+        console.log(newuser?.user.id, 'id')
+
         try {
-            const response = await fetch('api/users', {
+            const response = await fetch(`api/users/${newuser?.user.id}`, {
                 method: "POST",
                 body: JSON.stringify(userObj)
             })
@@ -37,18 +47,7 @@ const UpdateUserComponent = () => {
             if (result.status == 500) {
                 toast.error('A user with this email already exists');
             } else {
-                // setNewUser(result.user)
-                toast.success('Sign Up was successful');
-                console.log(result.user);
-                router.push(`/profile/${result.user.id}`)
-
-                // await signIn("credentials", {
-                //     email: email,
-                //     password: password,
-                //     redirect: true,
-                //     // callbackUrl: "/profile"
-                //     callbackUrl: `/profile/${newuser?.id}`,
-                // })
+                toast.success('Profile Update Was Successful');
             }
 
 

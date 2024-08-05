@@ -33,7 +33,9 @@ const LoginComponent = () => {
 
         setCookie('user', result as MyUser)
         toast.success("User Logged In Successfully");
-        router.push("/");     
+        
+        console.log(cookies, 'userCookie')
+        router.push("/home");     
 
     }
 

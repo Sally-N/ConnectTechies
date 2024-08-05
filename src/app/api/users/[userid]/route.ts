@@ -19,13 +19,13 @@ export async function POST(req: any, context: any, res: Response) {
         const userId = Number(params.userid);
 
 
-        const updateUser = await prisma.user.update({
+        const updatedUser = await prisma.user.update({
             where: {
                 id: (userId)
             },
             data: {
-                firstname: formdata.get('country'),
-                lastname: formdata.get('specialization'),
+                firstname: formdata.get('firstname'),
+                lastname: formdata.get('lastname'),
                 updatedAt: new Date(),
             }
         });
@@ -33,7 +33,7 @@ export async function POST(req: any, context: any, res: Response) {
         return NextResponse.json({
             status: 201,
             message: "User updated successfully",
-            user: updateUser,
+            user: updatedUser,
         })
 
 
