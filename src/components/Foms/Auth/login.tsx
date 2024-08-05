@@ -1,47 +1,24 @@
 import React, { useState } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
 import { Title, Text } from "@/Utils/Theme/customTheme";
-import { AuthFormStyle } from "@/Utils/Theme/form";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button, Grid } from "antd"
-import type { CheckboxProps } from 'antd';
-
-
-
-const onChange: CheckboxProps['onChange'] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-};
-
-const { useBreakpoint } = Grid;
+import toast from "react-hot-toast";
+import { MyUser } from "@/Utils/Types&Interfaces/user";
+import { CookiesProvider, useCookies } from 'react-cookie'
+import { useRouter } from "next/navigation";
 
 
 const LoginComponent = () => {
-   
+    const router = useRouter();
+    const [cookies, setCookie] = useCookies(['user'])
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const userObj = {email, password}
+    const [loggedInUser, setLoggedInUser] = useState<MyUser>()
 
-    const screens = useBreakpoint();
-    const marginValues = {
-        xs: "10px 10px",
-        sm: "10px 20px",
-        md: "20px 10px",
-        lg: "20px 20px",
-        xl: "20px 30px",
-    };
-
-    // Get the appropriate margin value based on the current screen size
-    const getMargin = () => {
-        if (screens.xl) return marginValues.xl;
-        if (screens.lg) return marginValues.lg;
-        if (screens.md) return marginValues.md;
-        if (screens.sm) return marginValues.sm;
-        return marginValues.xs; // default for xs and undefined
-    };
-
-
-    async function handleSubmit(){
-
+     async function handleSubmit(){
         const response = await fetch('/api/login', {
             method: "POST",
             headers: {
@@ -50,15 +27,18 @@ const LoginComponent = () => {
             body: JSON.stringify(userObj)           
         }) 
         const result = await response.json();
-        console.log(result);
+        if (result.status === 501){
+            toast.error("Incorrect password");
+        }
+
+        setCookie('user', result as MyUser)
+        toast.success("User Logged In Successfully");
+        router.push("/");     
 
     }
 
-
-
-
     return (
-        <Row style={{ ...AuthFormStyle}}>
+        <Row>
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>
@@ -90,7 +70,7 @@ const LoginComponent = () => {
                     </Row>
         
                     <Row justify={'end'} align={'middle'}>
-                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }} onClick={handleSubmit}>Next</Button>
+                        <Button type={'primary'} style={{ ...SignUpButtonStyle, }} onClick={handleSubmit}>Submit</Button>
                     </Row>
                 </form>
             </Col>

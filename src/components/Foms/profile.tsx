@@ -41,10 +41,11 @@ type ProfileSetupComponentProps = {
 };
 
 
-const router = useRouter();
 
 
 const ProfileSetupComponent: React.FC<ProfileSetupComponentProps> = ({ user }) => {
+    const router = useRouter();
+
     const userId = user.id;
     console.log('userid', userId);
     const [aboutBio, setAboutbio] = useState<string>('');

@@ -1,3 +1,4 @@
+import { Chat } from "@prisma/client";
 import { Connection } from "./connection";
 import { Profile } from "./profile";
 
@@ -7,9 +8,9 @@ export interface MyUser {
   status: number
   message: string
   user: User
-  connections: any[]
+  connections: Connection[]
   notifications: Notification[]
-  userChats: any[]
+  chats: Chat[]
   profile: Profile
 }
 
