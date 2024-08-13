@@ -1,5 +1,6 @@
 import { MyUser, User } from "@/Utils/Types&Interfaces/user";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export function useGetUserById(userid: Number) {
     const [users, setUsers] = useState<MyUser>();
@@ -44,5 +45,18 @@ export function useGetUserById(userid: Number) {
 
     return ({ users })
 
+}
+
+
+export function useGetUser(){
+    const loggedInUser = Cookies.get('user');
+    let user;
+
+    if (loggedInUser) {
+        user = JSON.parse(loggedInUser) as unknown as MyUser;
+    }
+    console.log(loggedInUser, user, 'lu')
+
+    return user;
 }
 

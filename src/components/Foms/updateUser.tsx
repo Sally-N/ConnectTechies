@@ -5,27 +5,14 @@ import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button } from "antd"
 import toast from "react-hot-toast";
 import { MyUser } from "@/Utils/Types&Interfaces/user";
-import { useCookies } from "react-cookie";
 
 
 const UpdateUserComponent = () => {
-    const [cookies, setCookie ]= useCookies(['user']);
 
     const [newuser, setNewUser] = useState<MyUser>();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
 
-
-
-
-
-
-    useEffect(() => {
-        setNewUser(cookies.user);
-    })
-
-
-    console.log(cookies.user)
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

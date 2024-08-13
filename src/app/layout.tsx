@@ -1,13 +1,18 @@
-import React from 'react'
+'use client';
+import React, { useContext, useEffect, useState } from 'react'
 import { ConnectTechiesTheme } from '@/Utils/Theme/customTheme'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { UserContext, UserProvider } from '@/Utils/Context/userContext'
+import { MyUser } from '@/Utils/Types&Interfaces/user';
 // import SessionWrapper from '@/components/auth/sessionwrapper'
+import { Cookies } from '@/Utils/cookies'
+import { AuthContext } from '@/Utils/Context/myUserContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: 'Connect Techies',
   description: 'WebApp to connect with others in Tech',
 }
@@ -17,11 +22,51 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const [isLogedIn, setIsLogedIn] = useState<boolean>(false)
+
+  const [creds, setCreds] = useState<null | MyUser>(null)
+  const [isloaded, setIsloaded] = useState(false);
+  const thyUser = useContext(UserContext);
+
+  const getAuth = () => {
+    if ((Cookies.get('user') === '')) {
+      setCreds(null)
+    } else {
+      let user = Cookies.get('user');
+      if (user) {
+        setCreds(JSON.parse(user) as unknown as MyUser)
+        return creds;
+      }
+
+    }
+
+  }
+  useEffect(() => {
+    setIsloaded(true)
+    getAuth()
+    console.log(creds, 'creds')
+  }, [])
+
+  const updateCreds = ({ value }: {
+    value: MyUser | null
+  }) => {
+    value == null ? setIsLogedIn(false) : setIsLogedIn(true);
+    setCreds(value)
+
+  }
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <SessionWrapper> */}
+        <AuthContext.Provider value={{
+          update: updateCreds,
+          isLogedIn: isLogedIn,
+          value: creds
+        }}>
+
+          {/* <SessionWrapper> */}
           <ConnectTechiesTheme childrenElements={children} />
+        </AuthContext.Provider>
         {/* </SessionWrapper> */}
       </body>
     </html>

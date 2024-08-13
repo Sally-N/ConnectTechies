@@ -26,8 +26,8 @@ function getItem(
 
 const items: MenuItem[] = [
     getItem('Home', '1', <HomeOutlined />),
-    getItem('My Connections', '2', <TeamOutlined />),
-   
+    getItem((<a href='/myconnections'>My Connections</a>), '2', <TeamOutlined />),
+
     getItem('Files', '9', <FileOutlined />),
 ];
 
@@ -35,9 +35,9 @@ const SidemenuComponent: React.FC = () => {
 
 
     return (
-        <div style={{backgroundColor: 'white'}}>
+        <div style={{ backgroundColor: 'white' }}>
             <div className="demo-logo-vertical" />
-            <Menu  defaultSelectedKeys={['1']} mode="inline" items={items} />
+            <Menu defaultSelectedKeys={['1']} mode="inline" items={items} />
         </div>
     );
 };

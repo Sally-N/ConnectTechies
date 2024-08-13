@@ -17,10 +17,11 @@ export default function LoginUserPage() {
         <>
             {mounted &&
                 (
-                    <Row align={'middle'} justify={'center'}>
-                        <Toaster />
-                        <LoginComponent />
-                    </Row>
+                        <Row align={'middle'} justify={'center'}>
+                            
+                            <Toaster />
+                            <LoginComponent />
+                        </Row>
                 )
             }
 

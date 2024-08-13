@@ -5,19 +5,21 @@ import UserCards from '@/components/cards/user'
 import { User } from '@/Utils/Types&Interfaces/user';
 import { useState } from 'react';
 import MainLayout from '../mainlayout';
-import { UserContext } from '@/Utils/Context/userContext';
+import { UserContext, useUserContext } from '@/Utils/Context/userContext';
 
-export default function HomePage () {
+export default function HomePage() {
     const [users, setAllUsers] = useState<User[]>([]);
-    const [cookies, setCookie] = useCookies(['user']);
+
+    const { user } = useUserContext();
+
+    console.log(user?.user, 'myusercontext')
 
     // const cookie = useCookies(['user']);
 
-    console.log(cookies.user, 'cookie')
 
     const loggedInUser = useContext(UserContext);
     console.log(loggedInUser);
-    
+
 
     const getData = async () => {
         try {

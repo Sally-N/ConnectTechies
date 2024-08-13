@@ -3,13 +3,13 @@
 import React, { useEffect } from 'react'
 import { User } from '@/Utils/Types&Interfaces/user';
 import { useState } from 'react';
-import { CookiesProvider, useCookies } from 'react-cookie';
 import HomePage from './home/page';
 import LoginUserPage from './login/page';
+import Cookies from 'js-cookie';
 
 export default function AppPage() {
   const [users, setAllUsers] = useState<User[]>([]);
-  const [cookies, setCookie] = useCookies(['user'])
+  const [cookieUser, setCookieUser] = useState<string | undefined>(undefined);
 
 
   const getData = async () => {
@@ -30,18 +30,17 @@ export default function AppPage() {
 
   useEffect(() => {
     getData();
+    const user = Cookies.get('user');
+    setCookieUser(user);
   }, [])
 
-  console.log(cookies.user, 'cook')
 
 
 
 
   return (
-    <CookiesProvider>
       <div>
-        {cookies.user ? <HomePage/> :  <LoginUserPage />}
+      {cookieUser ? <HomePage /> : <LoginUserPage />}
       </div>
-    </CookiesProvider>
   )
 }

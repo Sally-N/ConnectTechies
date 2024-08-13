@@ -25,6 +25,15 @@ export interface MyUser {
   }
 
 
+    export interface authInterface {
+      value: null | MyUser;
+      isLogedIn: boolean;
+      update: ({ value }: {
+        value: MyUser | null
+      }) => void;
+    }
+
+
   
 
   
