@@ -1,11 +1,13 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Avatar, Button, Card, Col, Row, Typography } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
-import { User } from '@/Utils/Types&Interfaces/user';
+import { MyUser, User } from '@/Utils/Types&Interfaces/user';
 import { Profile } from '@/Utils/Types&Interfaces/profile';
 
 import './cards.css';
 import { Paragraph } from '@/Utils/Theme/customTheme';
+import { AuthContext } from '@/Utils/Context/myUserContext';
+import toast from 'react-hot-toast';
 
 const { Title } = Typography;
 
@@ -16,6 +18,41 @@ interface usersProps {
 
 const UsersCard: FC<usersProps> = ({ users }) => {
   const [usersProfiles, setUsersProfiles] = useState<Profile[]>([]);
+  const MyUser = useContext(AuthContext);
+
+  const handleCreateConnection = async (userId: number) => {
+    let initiatorId = MyUser.value?.user.id;
+    let acceptorId = userId;
+    let status = 'pending'
+    let connectionObj = { initiatorId, acceptorId, status }
+    try {
+      const res = await fetch(`/api/userconnections/${MyUser.value?.user.id}`, {
+        method: 'POST',
+        body: JSON.stringify(connectionObj)
+      });
+
+      const responseData = await res.json();
+      console.log(responseData, 'ress')
+
+      if (responseData.status === 500) {
+        console.log('error requesting connection')
+      }
+
+
+
+      MyUser.update({value: responseData.updatedUser as MyUser})
+      toast.success('Connection request sent successfully')
+      // setUsersProfiles(responseData?.userProfiles);
+      // return usersProfiles;
+
+      console.log(MyUser.value, 'wait')
+
+    } catch (err) {
+      console.log(err, 'error creating connection')
+    }
+  }
+
+
 
 
   const fetchUsersProfiles = async () => {
@@ -54,15 +91,6 @@ const UsersCard: FC<usersProps> = ({ users }) => {
 
     return imagePath;
   }
-
-
-
-
-
-
-
-
-
   return (
     <Row gutter={[12, 12]}>
       {users.map((user, index) => {
@@ -86,7 +114,7 @@ const UsersCard: FC<usersProps> = ({ users }) => {
               <Avatar size={64} src={`${imagePath}`} />
               <Title className="one-line" level={5}>{user.firstname + ' ' + user.lastname}</Title>
               <Paragraph className='two-lines'>{profile?.level + " " + profile?.specialization}</Paragraph>
-              <Button icon={<UserAddOutlined />}>Connect</Button>
+              <Button icon={<UserAddOutlined />} onClick={() => handleCreateConnection(user.id)}>Connect</Button>
               <Button icon={<UserAddOutlined />}>View Profile</Button>
 
             </Card>

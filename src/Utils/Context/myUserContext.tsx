@@ -1,4 +1,3 @@
-// import { ILogin, authInterface, credsInterface } from "@/inteface/auth";
 import { createContext } from "react";
 import { authInterface, MyUser } from "../Types&Interfaces/user";
 

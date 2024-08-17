@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, context: any) {
         const userId = Number(params.userid);
         const body = await req.json();
 
-        console.log(body,userId, 'mnbvcvbn')
+        console.log(body, userId, 'mnbvcvbn')
         const newConnection = await prisma.connection.create({
             data: {
                 initiatorId: userId,
@@ -20,10 +20,61 @@ export async function POST(req: NextRequest, context: any) {
             }
         })
 
+        const userConnections = await prisma.connection.findMany({
+            where:
+            {
+                OR: [
+                    {
+                        initiatorId: userId,
+                        status: { not: 'rejected' },
+                    },
+                    {
+                        acceptorId: userId,
+                        status: { not: 'rejected' },
+                    }
+                ]
+            },
+        })
+
+
+        const userNotifications = await prisma.notification.findMany({
+            where: { userId: userId },
+        });
+
+        const chats = await prisma.chat.findMany({
+            where: {
+                OR: [
+                    { senderId: userId },
+                    { recipientId: userId },
+                ]
+            },
+        })
+
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                userId: userId
+            }
+        })
+
+        const existingUserById = await prisma.user.findUnique({
+            where: { id: userId }
+        });
+
+
+
         return NextResponse.json({
             status: 201,
             message: 'New Connection created',
-            newconnection: newConnection
+            newconnection: newConnection,
+            updatedUser: {
+                status: 201,
+                message: 'New Connection created',
+                connections: userConnections,
+                notifications: userNotifications,
+                userChat: chats,
+                profile: userProfile,
+                user: existingUserById
+            }
         })
 
     } catch (error) {
@@ -36,13 +87,13 @@ export async function POST(req: NextRequest, context: any) {
 }
 
 
-export async function PUT(req: NextRequest, context: any){
+export async function PUT(req: NextRequest, context: any) {
     try {
         const { params } = context;
         const userId = Number(params.userid);
         const body = await req.json();
 
-        console.log(body,userId, 'mnbvcvbn')
+        console.log(body, userId, 'mnbvcvbn')
         const updatedConnection = await prisma.connection.update({
             where: {
                 id: body.connectionId
@@ -64,5 +115,5 @@ export async function PUT(req: NextRequest, context: any){
             message: "Error creating new connection",
         })
 
-    }   
+    }
 }

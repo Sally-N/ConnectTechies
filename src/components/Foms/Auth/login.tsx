@@ -41,18 +41,6 @@ const LoginComponent = () => {
         authContext.update({ value: result as MyUser })
         Cookies.add('user', JSON.stringify(result), 1)
         toast.success('Login Successfully ')
-        // Cookies.set('user', JSON.stringify(result));
-
-
-
-        // theUserContext.updateUser(result as MyUser);
-
-        // toast.success("User Logged In Successfully"); 
-
-
-
-        // console.log(theUserContext.user, 'context')
-
     }
 
     useEffect(() => {

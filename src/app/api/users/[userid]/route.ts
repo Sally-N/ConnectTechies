@@ -7,8 +7,6 @@ import { PrismaClient } from "@prisma/client";
 import { profile } from 'console';
 
 
-
-
 const prisma = new PrismaClient();
 ////update profile
 export async function POST(req: any, context: any, res: Response) {
@@ -48,7 +46,7 @@ export async function GET(req: NextRequest, context: any) {
     try {
         const { params } = context;
         const userId = Number(params.userid);
-        console.log(userId, 'userId')
+        console.log(userId, 'userId', 'fgggg')
 
         if (isNaN(userId)) {
             return NextResponse.json({

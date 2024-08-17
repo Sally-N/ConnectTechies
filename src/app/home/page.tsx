@@ -6,6 +6,7 @@ import { User } from '@/Utils/Types&Interfaces/user';
 import { useState } from 'react';
 import MainLayout from '../mainlayout';
 import { UserContext, useUserContext } from '@/Utils/Context/userContext';
+import { Toaster } from 'react-hot-toast';
 
 export default function HomePage() {
     const [users, setAllUsers] = useState<User[]>([]);
@@ -44,6 +45,7 @@ export default function HomePage() {
 
     return (
         <MainLayout>
+            <Toaster />
             <UserCards users={users} />
         </MainLayout>
     )

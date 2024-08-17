@@ -8,9 +8,16 @@ import { UserAddOutlined } from '@ant-design/icons';
 const { Title } = Typography;
 
 const UserConnectionsCard: FC = () => {
-  const theUser = useContext(AuthContext);
+  // useEffect(() => {
+    const theUser = useContext(AuthContext);
+    console.log(theUser.value, 'newCon')
+    useEffect(() => {
+      console.log(theUser.value, 'Updated User Context');
+  }, [theUser.value]); 
+  // }, [])
   const [connectedUsers, setConnectedUsers] = useState<MyUser[]>([]);
   const [connection, setConnection] = useState<MyUser>();
+
 
   // Function to fetch user data by userId
   const fetchUser = async (userId: number): Promise<MyUser | null> => {
