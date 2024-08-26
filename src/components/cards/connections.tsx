@@ -62,7 +62,7 @@ const UserConnectionsCard: FC = () => {
       <Row gutter={[12, 12]}>
         {connectedUsers.map((user, index) => (
           <Col xs={12} sm={8} md={6} lg={5} xl={4} key={index}>
-            <Card bordered={true} className='card card-hover'>
+            <Card bordered={true}>
               <img
                 alt="User profile"
                 src={ "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}

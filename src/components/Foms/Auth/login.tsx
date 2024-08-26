@@ -40,7 +40,9 @@ const LoginComponent = () => {
         console.log(result, 'response');
         authContext.update({ value: result as MyUser })
         Cookies.add('user', JSON.stringify(result), 1)
-        toast.success('Login Successfully ')
+        toast.success('Login Successfully');
+        router.push('/');
+
     }
 
     useEffect(() => {
@@ -59,8 +61,6 @@ const LoginComponent = () => {
                     <Text type={'secondary'} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '5px' }}>Please enter your details.</Text>
                 </Row>
                 <form style={{ padding: '20px' }}>
-
-
                     <Row style={{ margin: "0 0 10px" }}>
                         <Col span={24}>
                             <Text style={styleText}>

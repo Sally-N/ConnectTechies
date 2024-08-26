@@ -17,6 +17,7 @@ export interface MyUser {
   export interface User {
     id: number
     email: string
+    uniqueId: string
     firstname: string
     lastname: string
     password: string

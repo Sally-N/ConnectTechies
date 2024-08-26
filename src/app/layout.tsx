@@ -1,12 +1,10 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ConnectTechiesTheme } from '@/Utils/Theme/customTheme'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { UserContext, UserProvider } from '@/Utils/Context/userContext'
 import { MyUser } from '@/Utils/Types&Interfaces/user';
-// import SessionWrapper from '@/components/auth/sessionwrapper'
 import { Cookies } from '@/Utils/cookies'
 import { AuthContext } from '@/Utils/Context/myUserContext';
 
@@ -26,7 +24,6 @@ export default function RootLayout({
 
   const [creds, setCreds] = useState<null | MyUser>(null)
   const [isloaded, setIsloaded] = useState(false);
-  const thyUser = useContext(UserContext);
 
   const getAuth = () => {
     if ((Cookies.get('user') === '')) {
@@ -52,7 +49,6 @@ export default function RootLayout({
   }) => {
     value == null ? setIsLogedIn(false) : setIsLogedIn(true);
     setCreds(value)
-
   }
 
   return (
@@ -64,10 +60,8 @@ export default function RootLayout({
           value: creds
         }}>
 
-          {/* <SessionWrapper> */}
           <ConnectTechiesTheme childrenElements={children} />
         </AuthContext.Provider>
-        {/* </SessionWrapper> */}
       </body>
     </html>
   )

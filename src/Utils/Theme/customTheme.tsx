@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google';
 import { Poppins } from 'next/font/google';
 
 export const inter = Inter({ subsets: ['latin'] })
-export const poppins = Poppins({subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] }) 
+export const poppins = Poppins({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] })
 
 export const { Text, Paragraph, Title } = Typography;
 
@@ -28,7 +28,7 @@ export const ConnectTechiesTheme = ({
                         colorBgContainerDisabled: '#ed33a4',
                         borderRadius: 40,
                         defaultShadow: 'none',
-                        colorBgTextActive: 'white',                        
+                        colorBgTextActive: 'white',
                         algorithm: true, // Enable algorithm
                         primaryShadow: 'none',
                         colorTextDisabled: 'white',
@@ -51,7 +51,7 @@ export const ConnectTechiesTheme = ({
                         boxShadow: '#f7f8f9',
                         itemSelectedBg: '#f7f8f9',
                         iconMarginInlineEnd: 0,
-                        
+
                     },
                     Avatar: {
                         boxShadow: '#f7f8f9',
@@ -61,7 +61,8 @@ export const ConnectTechiesTheme = ({
                         optionSelectedBg: 'rgba(0, 0, 0, 0.04)',
                     },
                     Card: {
-                        padding: 0
+                        padding: 0,
+                        paddingLG: 10,
 
                     },
 

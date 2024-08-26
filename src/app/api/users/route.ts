@@ -5,7 +5,7 @@ var fs = require('fs');
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 import { NextRequest, NextResponse } from "next/server";
-
+import { v4 as uuidv4 } from 'uuid';
 
 export const config = {
     api: {
@@ -33,6 +33,9 @@ function toNodeReadable(webReadable: ReadableStream<Uint8Array>): Readable {
 
 export async function POST(req: NextRequest, res: Response) {
     try {
+
+        const uuid = uuidv4();
+        console.log(uuid, 'uuid')
 
         // const body = await req.json()
 
@@ -104,6 +107,10 @@ export async function POST(req: NextRequest, res: Response) {
                 lastname: lastName as string,
                 password: hashedPassword as string,
                 email: email as string,
+                uniqueId: uuid
+    
+                // uniqueId: uuidv4,
+            
                 // country: '',
                 // specialization: '',
                 // image: '',
