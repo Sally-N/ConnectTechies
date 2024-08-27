@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { Title, Text } from "@/Utils/Theme/customTheme";
 import { styleText, spanStyle } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button, Grid, Select } from "antd"
@@ -7,6 +7,9 @@ import selectCountryList from "react-select-country-list";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
+import { AuthContext } from "@/Utils/Context/myUserContext";
+import toast from "react-hot-toast";
+import { MyUser } from "@/Utils/Types&Interfaces/user";
 
 const { TextArea } = Input;
 
@@ -38,6 +41,8 @@ const beforeUpload = (file: FileType) => {
 };
 
 const UpdateUserProfileFormComponent: React.FC = () => {
+    const user = useContext(AuthContext);
+    console.log(user, 'userContext')
     const [aboutBio, setAboutbio] = useState<string>('');
     const [linkedInUrl, setLinkedInUrl] = useState<string>('');
     const [portfolioUrl, setPortfolioUrl] = useState<string>('');
@@ -47,6 +52,8 @@ const UpdateUserProfileFormComponent: React.FC = () => {
     const [imageUrl, setImageUrl] = useState<string>('');
     const [level, setLevel] = useState<string>('');
     const [specialization, setSpecialization] = useState<string>('')
+    const [industries, setIndustries] = useState<String[]>([])
+
     const options = useMemo(() => selectCountryList().getLabels(), [])
 
 
@@ -87,6 +94,9 @@ const UpdateUserProfileFormComponent: React.FC = () => {
     }
 
 
+    function handleIndustriesChange(value: string[]) {
+        setIndustries(value);
+    }
 
     async function handleSubmit() {
 
@@ -102,67 +112,15 @@ const UpdateUserProfileFormComponent: React.FC = () => {
             formDataToSend.append('aboutBio', aboutBio);
             formDataToSend.append('linkedInUrl', linkedInUrl);
             formDataToSend.append('portfolioUrl', portfolioUrl);
-
-            // formDataToSend.append('image', formData.image as unknown as File,  )
-
-            // if (formData.image) {
-            //     formDataToSend.append('image', formData.image as File,); // Append the file to the form data
-            // }
-            // for (var pair of formDataToSend.entries()) {
-            //     console.log(pair[0] + ', ' + pair[1]);
-
-            // }
-
-
-            // Object.entries(formData).forEach(([key, value]) => {
-            //     formDataToSend.append(key, !value); // Voilà, an item is packed.
-            //     // if (value instanceof File) {
-            //     //     formDataToSend.append(key, value, value.name);
-            //     // }
-            //   });
-
+            formDataToSend.append('industries', JSON.stringify(industries));
             console.log(formDataToSend, 'fssss')
-            const response = await fetch('/api/profile', {
+            const response = await fetch(`/api/profile/${user.value?.user.id}`, {
                 method: "POST",
                 body: formDataToSend
             });
 
             const result = await response.json();
             console.log(result)
-
-            // if (status == 201) {
-            //     setFormData({
-            //         firstname: '',
-            //         lastname: '',
-            //         email: '',
-            //         password: '',
-            //         confirmPassword: '',
-            //         country: '',
-            //         level: '',
-            //         specialization: '',
-            //         image: null,
-            //     });
-            //     setCurrent(0);
-            //     toast.success('You have signed up successfully');
-            //     window.location.href = ('/login')
-
-            // }
-            // else {
-            //     setFormData({
-            //         firstname: '',
-            //         lastname: '',
-            //         email: '',
-            //         password: '',
-            //         confirmPassword: '',
-            //         country: '',
-            //         level: '',
-            //         specialization: '',
-            //         image: null,
-            //     });
-            //     setCurrent(0);
-            //     toast.error('Unable to create account');
-            // }
-
             console.log("Success:", result);
         } catch (error) {
             console.log(error);
@@ -177,6 +135,13 @@ const UpdateUserProfileFormComponent: React.FC = () => {
         })
         const result = await response.json();
         console.log(result);
+
+        if (result.status == 500) {
+            toast.error('A user with this email already exists');
+        } else {
+            user.update({ value: result! as MyUser })
+            toast.success('Profile Update Was Successful');
+        }
 
     }
 
@@ -205,67 +170,6 @@ const UpdateUserProfileFormComponent: React.FC = () => {
                                 Specialization
                             </Text>
                             <Input placeholder="Product Manager" value={specialization} onChange={(e) => e.target.value} />
-                            {/* <Select options={
-                                [
-                                    {
-                                        value: 'Mobile Developer',
-                                        label: 'Mobile Developer'
-                                    },
-                                    {
-                                        value: 'Web developer',
-                                        label: 'Web Developer',
-                                    },
-                                    {
-                                        value: 'Frontend Developer',
-                                        label: 'Frontend Developer',
-                                    },
-                                    {
-                                        value: 'Backend Developer',
-                                        label: 'Backend Developer',
-
-                                    },
-                                    {
-                                        value: 'FullStack Developer',
-                                        label: 'Fullstack Developer'
-                                    },
-                                    {
-                                        value: 'DevOps Developer',
-                                        label: 'DevOps Developer',
-                                    },
-                                    {
-                                        value: 'UI/UX Designer',
-                                        label: 'UI/UX Designer',
-                                    },
-                                    {
-                                        value: 'Cyber Security',
-                                        label: 'Cyber Security',
-                                    },
-                                    {
-                                        value: 'Technical Writer',
-                                        label: 'Technical Writer',
-                                    },
-                                    {
-                                        value: 'DevOps Developer',
-                                        label: 'DevOps Developer',
-                                    },
-                                    {
-                                        value: 'Cloud Engineer',
-                                        label: 'Cloud Engineer',
-                                    },
-                                    {
-                                        value: 'Data Scientist',
-                                        label: 'Data Scientist',
-                                    },
-                                    {
-                                        value: 'Network Engineer',
-                                        label: 'Network Engineer',
-                                    }
-                                ]
-                            }
-                                value={specialization}
-                                onChange={(value) => setSpecialization(value)}
-
-                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
                     <Row style={{ margin: "0 0 10px" }}>
@@ -274,40 +178,6 @@ const UpdateUserProfileFormComponent: React.FC = () => {
                                 Level of profession
                             </Text>
                             <Input value={level} onChange={(e) => e.target.value} />
-                            {/* <Select options={
-                                [
-                                    {
-                                        value: 'Beginner',
-                                        label: 'Beginner'
-                                    },
-                                    {
-                                        value: 'Intern',
-                                        label: 'Intern',
-                                    },
-                                    {
-                                        value: 'Student',
-                                        label: 'Student',
-                                    },
-                                    {
-                                        value: 'Intermediate',
-                                        label: 'Intermediate'
-                                    },
-                                    {
-                                        value: 'Advanced',
-                                        label: 'Advanced',
-
-                                    },
-
-                                    {
-                                        value: 'Expert',
-                                        label: 'Expert',
-                                    }
-                                ]
-                            }
-                                value={level}
-                                onChange={(value) => setLevel(value)}
-
-                                style={{ width: '100%' }} /> */}
                         </Col>
                     </Row>
                     <Row>
@@ -346,7 +216,6 @@ const UpdateUserProfileFormComponent: React.FC = () => {
                             </Text>
                             <Select
                                 mode="multiple"
-                                defaultValue={['Technology']}
                                 placeholder="Filled"
                                 variant="filled"
                                 style={{ width: '100% ' }}
@@ -361,6 +230,8 @@ const UpdateUserProfileFormComponent: React.FC = () => {
                                     { value: 'Banking and Finance', label: 'Banking and Finance' },
 
                                 ]}
+                                onChange={handleIndustriesChange}
+
                             />
                         </Col>
 

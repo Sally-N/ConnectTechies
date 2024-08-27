@@ -1,15 +1,16 @@
-import React, { FormEvent, useState, useEffect } from "react";
+import React, { FormEvent, useState, useEffect, useContext } from "react";
 import { SignUpButtonStyle } from "@/Utils/Theme/buttons";
 import { Text } from "@/Utils/Theme/customTheme";
 import { styleText } from "@/Utils/Theme/styleText";
 import { Row, Col, Input, Button } from "antd"
 import toast from "react-hot-toast";
 import { MyUser } from "@/Utils/Types&Interfaces/user";
+import { AuthContext } from "@/Utils/Context/myUserContext";
 
 
 const UpdateUserComponent = () => {
+    const user = useContext(AuthContext);
 
-    const [newuser, setNewUser] = useState<MyUser>();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
 
@@ -20,23 +21,28 @@ const UpdateUserComponent = () => {
         const userObj = { firstName, lastName }
         console.log(userObj, 'usero')
 
-        console.log(newuser?.user.id, 'id')
+        console.log(user.value?.user.id!, 'id')
+
 
         try {
-            const response = await fetch(`api/users/${newuser?.user.id}`, {
+
+            const response = await fetch(`/api/users/${user.value?.user.id!}`, {
                 method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(userObj)
             })
 
             const result = await response.json();
-            console.log(result);
+            console.log(result, 'userResult');
 
             if (result.status == 500) {
                 toast.error('A user with this email already exists');
             } else {
+                user.update({ value: result! as MyUser })
                 toast.success('Profile Update Was Successful');
             }
-
 
         } catch (error) {
             console.log(error, 'err')

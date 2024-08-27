@@ -8,11 +8,12 @@ import { profile } from 'console';
 
 
 const prisma = new PrismaClient();
-////update profile
+////update user
 export async function POST(req: any, context: any, res: Response) {
     try {
+        const { firstName, lastName } = await req.json();
 
-        const formdata = await req.formData();
+
         const { params } = context;
         const userId = Number(params.userid);
 
@@ -22,16 +23,56 @@ export async function POST(req: any, context: any, res: Response) {
                 id: (userId)
             },
             data: {
-                firstname: formdata.get('firstname'),
-                lastname: formdata.get('lastname'),
+                firstname: firstName,
+                lastname: lastName,
                 updatedAt: new Date(),
             }
         });
+
+        const userConnections = await prisma.connection.findMany({
+            where:
+            {
+                OR: [
+                    {
+                        initiatorId: userId,
+                        status: { not: 'rejected' },
+                    },
+                    {
+                        acceptorId: userId,
+                        status: { not: 'rejected' },
+                    }
+                ]
+            },
+        })
+
+
+        const userNotifications = await prisma.notification.findMany({
+            where: { userId: userId },
+        });
+
+        const chats = await prisma.chat.findMany({
+            where: {
+                OR: [
+                    { senderId: userId },
+                    { recipientId: userId },
+                ]
+            },
+        })
+
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                userId: userId
+            }
+        })
 
         return NextResponse.json({
             status: 201,
             message: "User updated successfully",
             user: updatedUser,
+            connections: userConnections,
+            notifications: userNotifications,
+            userChats: chats,
+            profile: userProfile,
         })
 
 

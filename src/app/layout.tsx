@@ -47,7 +47,7 @@ export default function RootLayout({
   const updateCreds = ({ value }: {
     value: MyUser | null
   }) => {
-    value == null ? setIsLogedIn(false) : setIsLogedIn(true);
+    value === null ? setIsLogedIn(false) : setIsLogedIn(true);
     setCreds(value)
   }
 

@@ -92,13 +92,15 @@ export async function POST(req: any, context: any, res: Response) {
             },
             data: {
                 // userId: Number(body.get('userId')),
-                country: body.get('country') || null,
-                specialization: body.get('specialization') || null,
-                image: filePathdb || null,
-                level: body.get('level') || null,
-                linkedInUrl: body.get('linkedInUrl') || null,
-                portfolioUrl: body.get('portfolioUrl') || null,
-                aboutBio: body.get('aboutBio') || null,
+                country: body.get('country') || undefined,
+                specialization: body.get('specialization') || undefined,
+                image: filePathdb || undefined,
+                level: body.get('level') || undefined,
+                linkedInUrl: body.get('linkedInUrl') || undefined,
+                portfolioUrl: body.get('portfolioUrl') || undefined,
+                aboutBio: body.get('aboutBio') || undefined,
+                industries: body.get('industries' || undefined)
+
                 // country: formdata.get('country') as string,
                 // specialization: formdata.get('specialization') as string,
                 // level: formdata.get('level') as string,
@@ -111,7 +113,7 @@ export async function POST(req: any, context: any, res: Response) {
             data: {
                 userId: newUserProfile.userId,
                 status: 'unread',
-                message: 'Profile setup is complete',
+                message: 'Profile updated',
             }
         })
 

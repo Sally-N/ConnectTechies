@@ -1,11 +1,13 @@
-import React, { FC, useContext } from "react"
-import { Button, Col, Row } from "antd"
+import React, { FC, useContext, useState } from "react"
+import { Button, Col, Modal, Row } from "antd"
 import Image from "next/image";
 import { Title, Paragraph } from "@/Utils/Theme/customTheme";
 import Link from "next/link";
 import { AuthContext } from "@/Utils/Context/myUserContext";
 import { MyUser } from "@/Utils/Types&Interfaces/user";
 import toast from "react-hot-toast";
+import UpdateUserComponent from "../Foms/updateUser";
+import UpdateUserTabComponent from "../Tab/updateUserTab";
 
 interface ProfileDetailsComponentProps {
     user: MyUser;
@@ -14,6 +16,7 @@ interface ProfileDetailsComponentProps {
 const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user }) => {
     console.log(user, 'my profile')
     const loggedInUser = useContext(AuthContext)
+    const [open, setOpen] = useState(false);
     const getUserImage = (image: string | null) => {
         if (!image) {
             return ('/userImages/default.png');
@@ -28,34 +31,38 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
         let status = 'pending'
         let connectionObj = { initiatorId, acceptorId, status }
         try {
-          const res = await fetch(`/api/userconnections/${loggedInUser.value?.user.id}`, {
-            method: 'POST',
-            body: JSON.stringify(connectionObj)
-          });
-    
-          const responseData = await res.json();
-          console.log(responseData, 'ress')
-    
-          if (responseData.status === 500) {
-            console.log('error requesting connection')
-          }
-    
-    
-    
-          loggedInUser.update({ value: responseData.updatedUser as MyUser })
-          toast.success('Connection request sent successfully')
-          // setUsersProfiles(responseData?.userProfiles);
-          // return usersProfiles;
-    
-          console.log(loggedInUser.value, 'wait')
-    
+            const res = await fetch(`/api/userconnections/${loggedInUser.value?.user.id}`, {
+                method: 'POST',
+                body: JSON.stringify(connectionObj)
+            });
+
+            const responseData = await res.json();
+            console.log(responseData, 'ress')
+
+            if (responseData.status === 500) {
+                console.log('error requesting connection')
+            }
+
+
+
+            loggedInUser.update({ value: responseData.updatedUser as MyUser })
+            toast.success('Connection request sent successfully')
+            // setUsersProfiles(responseData?.userProfiles);
+            // return usersProfiles;
+
+            console.log(loggedInUser.value, 'wait')
+
         } catch (err) {
-          console.log(err, 'error creating connection')
+            console.log(err, 'error creating connection')
         }
-      }
+    }
+
+    const handleCancel = () => {
+        setOpen(false);
+      };
     return (
         <Row style={{ width: '100%' }}>
-            <Row align={'top'} justify={'space-evenly'} style={{ width: '100%', height: '100%', border: 'solid 2px pink' }}>
+            <Row align={'top'} justify={'space-evenly'} style={{ width: '100%', height: '100%' }}>
                 <Col span={3}>
                     <Image loading="lazy" src={getUserImage(user.profile.image)} alt="user image" width={100} height={100} />
                 </Col>
@@ -63,24 +70,24 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                     <Row justify={'space-between'} align={'top'} style={{ width: '100%' }}>
                         <Col>
                             <Title level={5} style={{ margin: '0px' }}>{user.user.firstname + " " + user.user.lastname}</Title>
-                            <Title level={5} style={{ margin: '0px', fontWeight: 300}}>
+                            <Title level={5} style={{ margin: '0px', fontWeight: 300 }}>
                                 {user.profile.level + " " + user.profile.specialization}
                             </Title>
                         </Col>
                         <Col>
-                            {user.user.id === loggedInUser.value?.user.id && (
-                                <Button type="primary" style={{ marginLeft: '10px' }}>
+                            {loggedInUser.value?.user?.id! && user.user.id === loggedInUser.value?.user.id!! && (
+                                <Button type="primary" style={{ marginLeft: '10px' }} onClick={() => setOpen(!open)}>
                                     Edit Profile
                                 </Button>
                             )}
                         </Col>
                     </Row>
-                    <Paragraph style={{margin: '0px', padding: '0px'}}>
+                    <Paragraph style={{ margin: '0px', padding: '0px' }}>
                         {user.user.email}
                     </Paragraph>
-                    <Paragraph style={{ width: '100%', margin: '0px', padding: 0}}>
-                        Several years of experience in product design with a wide range of industries including SaaS, E-Commerce, B2B, Travel, EdTech, and Aggro-tech. Designed and managed several products and pro
-                        {/* {user.profile.aboutBio} */}
+                    <Paragraph style={{ width: '100%', margin: '0px', padding: 0 }}>
+                        {/* Several years of experience in product design with a wide range of industries including SaaS, E-Commerce, B2B, Travel, EdTech, and Aggro-tech. Designed and managed several products and pro */}
+                        {user.profile.aboutBio}
                     </Paragraph>
                     <Row gutter={12} justify={'end'}>
                         <Col>
@@ -123,6 +130,9 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                     </Row>
                 </Col>
             </Row>
+             <Modal open={open} onCancel={handleCancel}>
+                 <UpdateUserTabComponent />
+             </Modal>
         </Row>
 
     )
