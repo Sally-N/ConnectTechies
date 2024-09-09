@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, theme } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import NavbarComponent from '@/components/navigation/navbar';
@@ -50,7 +50,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
                 <Layout style={{
                     width: '100%',
                     height: 'fit-content',
-                    //  border: 'solid 10px green',
                     minHeight: '200vh'
                 }}>
                     <Sider width="13%" style={siderStyle} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}

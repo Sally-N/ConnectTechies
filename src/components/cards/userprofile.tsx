@@ -8,6 +8,8 @@ import { MyUser } from "@/Utils/Types&Interfaces/user";
 import toast from "react-hot-toast";
 import UpdateUserComponent from "../Foms/updateUser";
 import UpdateUserTabComponent from "../Tab/updateUserTab";
+import { useRouter } from "next/navigation";
+import create from "@ant-design/icons/lib/components/IconFont";
 
 interface ProfileDetailsComponentProps {
     user: MyUser;
@@ -17,6 +19,7 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
     console.log(user, 'my profile')
     const loggedInUser = useContext(AuthContext)
     const [open, setOpen] = useState(false);
+    const router = useRouter();
     const getUserImage = (image: string | null) => {
         if (!image) {
             return ('/userImages/default.png');
@@ -26,6 +29,10 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
 
 
     const handleCreateConnection = async (userId: number) => {
+        const existingConnections = loggedInUser.value?.connections.filter(anyUser => anyUser.id === user.user.id);
+        if (existingConnections) {
+            return;
+        }
         let initiatorId = loggedInUser.value?.user.id;
         let acceptorId = userId;
         let status = 'pending'
@@ -59,7 +66,74 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
 
     const handleCancel = () => {
         setOpen(false);
-      };
+    };
+
+    // initiatorId: number, acceptorId: number
+    const createChat = async (user: MyUser) => {
+        let existingChat = loggedInUser.value?.chats.filter((chat) => {
+            return chat.recipientId === user.user.id || chat.senderId === user.user.id;
+
+        })
+
+        console.log(existingChat, 'existingid')
+        let chatObj = {
+            receiverId: (user.user!.id) as Number,
+            senderId: (loggedInUser.value?.user.id) as Number,
+        }
+
+        console.log(chatObj, 'chatobj')
+
+        if (!existingChat) {
+            try {
+                const chatResponse = await fetch(`/api/chat`, {
+                    method: 'POST',
+                    body: JSON.stringify(chatObj),
+                })
+                console.log(chatResponse.json(), 'chatRes')
+            } catch (error) {
+                console.log(error)
+
+            }
+        }
+        // router.push('/chat')
+        // const userObj = { initiatorId, acceptorId }
+        // console.log(userObj, 'usero')
+
+        // try {
+        //     const response = await fetch('api/chat', {
+        //         method: "POST",
+        //         body: JSON.stringify(userObj)
+        //     })
+
+        //     const result = await response.json();
+        //     console.log(result);
+
+        //     // if (result.status == 500) {
+        //     //     toast.error('A user with this email already exists');
+        //     // } else {
+        //     //     sessionStorage.setItem("user", JSON.stringify(result.user))
+        //     //   console.log(sessionStorage.getItem("user"));
+
+        //     //     toast.success('Sign Up was successful');
+        //     //     console.log(result.user);
+        //     //     console.log(result.user.id)
+        //     //     router.push(`/profile`);
+        //     // router.push(`/profile/${result.user.id}`)
+
+        //     // await signIn("credentials", {
+        //     //     email: email,
+        //     //     password: password,
+        //     //     redirect: true,
+        //     //     // callbackUrl: "/profile"
+        //     //     callbackUrl: `/profile/${newuser?.id}`,
+        //     // })
+        //     // }
+
+
+        // } catch (error) {
+        //     console.log(error, 'err')
+        // }
+    }
     return (
         <Row style={{ width: '100%' }}>
             <Row align={'top'} justify={'space-evenly'} style={{ width: '100%', height: '100%' }}>
@@ -89,17 +163,18 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                         {/* Several years of experience in product design with a wide range of industries including SaaS, E-Commerce, B2B, Travel, EdTech, and Aggro-tech. Designed and managed several products and pro */}
                         {user.profile.aboutBio}
                     </Paragraph>
-                    <Row gutter={12} justify={'end'}>
-                        <Col>
-                            <Button type={'primary'}>Message</Button>
-                        </Col>
-                        <Col>
-                            <Button onClick={() => handleCreateConnection(user.user.id)} type={'default'}>Connect</Button>
-                        </Col>
-                    </Row>
+                    {loggedInUser.value?.user?.id! && user.user.id !== loggedInUser.value?.user.id!! && (
 
+                        <Row gutter={12} justify={'end'}>
+                            <Col>
+                                <Button onClick={() => createChat(user as MyUser)} type={'primary'}>Message</Button>
+                            </Col>
+                            <Col>
+                                <Button onClick={() => handleCreateConnection(user.user.id)} type={'default'}>Connect</Button>
+                            </Col>
+                        </Row>
+                    )}
                 </Col>
-
             </Row>
             <Row justify={'start'} style={{ width: '100%' }}>
                 <Col span={8}>
@@ -130,9 +205,9 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                     </Row>
                 </Col>
             </Row>
-             <Modal open={open} onCancel={handleCancel}>
-                 <UpdateUserTabComponent />
-             </Modal>
+            <Modal open={open} onCancel={handleCancel}>
+                <UpdateUserTabComponent />
+            </Modal>
         </Row>
 
     )

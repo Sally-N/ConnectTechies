@@ -7,14 +7,12 @@ import toast from "react-hot-toast";
 import { MyUser } from "@/Utils/Types&Interfaces/user";
 import { useRouter } from "next/navigation";
 // import Cookies from "js-cookie";
-import { UserContext } from "@/Utils/Context/userContext";
 import { AuthContext } from "@/Utils/Context/myUserContext";
 import { Cookies } from "@/Utils/cookies";
 
 
 const LoginComponent = () => {
     const router = useRouter();
-    let theUserContext = useContext(UserContext);
     let authContext = useContext(AuthContext)
 
 
@@ -22,6 +20,7 @@ const LoginComponent = () => {
     const [password, setPassword] = useState('');
     const [loggedInUser, setLoggedInUser] = useState<MyUser>();
     const userObj = { email, password }
+    console.log(authContext.value, 'value')
 
     async function handleSubmit() {
         const response = await fetch('/api/login', {
@@ -38,21 +37,26 @@ const LoginComponent = () => {
         }
 
         console.log(result, 'response');
-        authContext.update({ value: result as MyUser })
+        authContext.update({ value: result! as MyUser });
+        
         Cookies.add('user', JSON.stringify(result), 1)
         toast.success('Login Successfully');
-        router.push('/');
+        console.log(JSON.stringify(authContext.value), 'v')
+        console.log(authContext.isLogedIn, 'isloggedin')
+        router.push("/");
 
     }
 
-    useEffect(() => {
-        console.log(theUserContext.user, 'tehhhhh')
-    })
+    // useEffect(() => {
+    //     if (authContext.isLogedIn == true) {
+    //       router.push('/');
+    //     }
+    //   }, [authContext.isLogedIn]);
+
 
     return (
 
         <Row>
-            {JSON.stringify(theUserContext.user)}
             <Col span={24}>
                 <Row>
                     <Title level={3} style={{ textAlign: 'center', width: '100%', paddingBottom: '0px', marginBottom: '15px' }}>

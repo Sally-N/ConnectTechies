@@ -3,7 +3,7 @@ export interface CookiesInterFace {
     get: (name: string) => string
 }
 export const Cookies: CookiesInterFace = {
-    get: (cname) => {
+  get: (cname) => {
       let name = cname + "=";
       let decodedCookie = decodeURIComponent(document.cookie);
       let ca = decodedCookie.split(';');
@@ -16,8 +16,8 @@ export const Cookies: CookiesInterFace = {
           return c.substring(name.length, c.length);
         }
       }
-      return ""
-    },
+    return ""; // Return an empty string if the cookie is not found or if on the server side
+  },
   
   
     add: (cname: string, cvalue: string, exdays: number) => {

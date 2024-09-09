@@ -11,54 +11,96 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const body = await req.json()
     const { senderId, receiverId } = body;
 
-    console.log(senderId, receiverId);
 
-    if (typeof senderId === 'undefined' || typeof receiverId === 'undefined') {
-      return NextResponse.json({
-        status: 400,
-        message: 'senderId and receiverId are required',
-      });
-    }
+    console.log(Number(senderId), Number(receiverId), 'senderId', 'receiverId', 'bodyChat');
 
-    const existingChat = await prisma.chat.findFirst({
-      where: {
-        OR: [
-          {
-            recipientId: receiverId,
-            senderId: senderId,
-          },
-          {
-            recipientId: senderId,
-            senderId: receiverId,
-          }
-        ]
-      }
-    })
+    // if (typeof senderId === 'undefined' || typeof receiverId === 'undefined') {
+    //   return NextResponse.json({
+    //     status: 400,
+    //     message: 'senderId and receiverId are required',
+    //   });
+    // }
 
-    if (existingChat) {
-      return NextResponse.json({
-        status: 200,
-        chat: existingChat,
-      })
-    }
+    // const existingChat = await prisma.chat.findFirst({
+    //   where: {
+    //     OR: [
+    //       {
+    //         recipientId: receiverId,
+    //         senderId: senderId,
+    //       },
+    //       {
+    //         recipientId: senderId,
+    //         senderId: receiverId,
+    //       }
+    //     ]
+    //   }
+    // })
 
-    const chat = await prisma.chat.create({
-      data: {
-        senderId: senderId,
-        // message,
-        recipientId: receiverId,
-        //   socketId
-      },
-    });
+    // if (existingChat) {
+    //   return NextResponse.json({
+    //     status: 200,
+    //     chat: existingChat,
+    //   })
+    // }
+
+    // const chat = await prisma.chat.create({
+    //   data: {
+    //     senderId: senderId,
+    //     // message,
+    //     recipientId: receiverId,
+    //     //   socketId
+    //   },
+    // });
+
+
+    // const loggedInuser = await prisma.user.findUnique({
+    //   where: {
+    //     id: senderId,
+    //   }
+    // })
+
+    // const userProfile = await prisma.profile.findUnique({
+    //   where: {
+    //     userId: senderId,
+    //   }
+    // })
+
+    // const userConnections = await prisma.connection.findMany({
+    //   where:
+    //   {
+    //     OR: [
+    //       {
+    //         initiatorId: senderId,
+    //         status: { not: 'rejected' },
+    //       },
+    //       {
+    //         acceptorId: senderId,
+    //         status: { not: 'rejected' },
+    //       }
+    //     ]
+    //   },
+    // })
+
+
+    // const userNotifications = await prisma.notification.findMany({
+    //   where: { userId: senderId.id },
+    // });
 
     return NextResponse.json({
       status: 200,
-      chatFound: chat,
+      message: 'chat created sucessfully',
+      // user: loggedInuser,
+      // profile: userProfile,
+      // connections: userConnections,
+      // chats: chat,
+      // notifications: userNotifications,
     })
   } catch (error) {
-    console.error('Error saving message:', error);
-    // res.status(500).json({ error: 'Failed to save message' });
+    return NextResponse.json({
+      error: 'Error during user logging'
+    })
   }
+
 }
 
 
@@ -76,20 +118,16 @@ export async function GET(req: NextRequest, res: NextResponse) {
       }
     })
 
-    if (!chat) {
-      return NextResponse.json({
-        status: 500,
-        message: "Chat not found"
-      })
-    }
-
     return NextResponse.json({
       status: 200,
       chatFound: chat,
     })
 
   } catch (error) {
-    console.log(error, 'error')
+    return NextResponse.json({
+      status: 500,
+      error: 'Error during user logging'
+    })
   }
 
 }

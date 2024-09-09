@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-    FileOutlined,
+    MessageOutlined,
     TeamOutlined,
     HomeOutlined
 } from '@ant-design/icons';
@@ -25,10 +25,9 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('Home', '1', <HomeOutlined />),
+    getItem((<a href='/'>Home</a>), '1', <HomeOutlined />),
     getItem((<a href='/myconnections'>My Connections</a>), '2', <TeamOutlined />),
-
-    getItem('Files', '9', <FileOutlined />),
+    getItem((<a href='/chat'>Chat</a>), '2', <MessageOutlined  />),
 ];
 
 const SidemenuComponent: React.FC = () => {

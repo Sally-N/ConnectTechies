@@ -5,11 +5,10 @@ import { User } from '@/Utils/Types&Interfaces/user';
 import { useState } from 'react';
 import HomePage from './home/page';
 import LoginUserPage from './login/page';
-import Cookies from 'js-cookie';
+import { Cookies } from '@/Utils/cookies';
 
 export default function AppPage() {
   const [users, setAllUsers] = useState<User[]>([]);
-  const [cookieUser, setCookieUser] = useState<string | undefined>(undefined);
 
 
   const getData = async () => {
@@ -30,8 +29,6 @@ export default function AppPage() {
 
   useEffect(() => {
     getData();
-    const user = Cookies.get('user');
-    setCookieUser(user);
   }, [])
 
 
@@ -40,7 +37,8 @@ export default function AppPage() {
 
   return (
       <div>
-      {cookieUser ? <HomePage /> : <LoginUserPage />}
+      {/* {Cookies.get('user') === '' ? <LoginUserPage /> : <HomePage />} */}
+      <HomePage />
       </div>
   )
 }
