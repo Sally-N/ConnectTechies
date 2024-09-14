@@ -12,8 +12,11 @@ import { Cookies } from "@/Utils/cookies";
 
 
 const LoginComponent = () => {
+    console.log('user', Cookies.get('user'), 'intro')
     const router = useRouter();
-    let authContext = useContext(AuthContext)
+    let authContext = useContext(AuthContext);
+
+
 
 
     const [email, setEmail] = useState('');
@@ -39,11 +42,12 @@ const LoginComponent = () => {
         console.log(result, 'response');
         authContext.update({ value: result! as MyUser });
         
+        
         Cookies.add('user', JSON.stringify(result), 1)
         toast.success('Login Successfully');
         console.log(JSON.stringify(authContext.value), 'v')
-        console.log(authContext.isLogedIn, 'isloggedin')
-        router.push("/");
+        console.log(authContext.isLoggedIn, 'isloggedin')
+        // router.push("/");
 
     }
 

@@ -27,7 +27,7 @@ function getItem(
 const items: MenuItem[] = [
     getItem((<a href='/'>Home</a>), '1', <HomeOutlined />),
     getItem((<a href='/myconnections'>My Connections</a>), '2', <TeamOutlined />),
-    getItem((<a href='/chat'>Chat</a>), '2', <MessageOutlined  />),
+    getItem((<a href='/chat'>Chat</a>), '3', <MessageOutlined  />),
 ];
 
 const SidemenuComponent: React.FC = () => {

@@ -14,86 +14,86 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     console.log(Number(senderId), Number(receiverId), 'senderId', 'receiverId', 'bodyChat');
 
-    // if (typeof senderId === 'undefined' || typeof receiverId === 'undefined') {
-    //   return NextResponse.json({
-    //     status: 400,
-    //     message: 'senderId and receiverId are required',
-    //   });
-    // }
+    if (typeof senderId === 'undefined' || typeof receiverId === 'undefined') {
+      return NextResponse.json({
+        status: 400,
+        message: 'senderId and receiverId are required',
+      });
+    }
 
-    // const existingChat = await prisma.chat.findFirst({
-    //   where: {
-    //     OR: [
-    //       {
-    //         recipientId: receiverId,
-    //         senderId: senderId,
-    //       },
-    //       {
-    //         recipientId: senderId,
-    //         senderId: receiverId,
-    //       }
-    //     ]
-    //   }
-    // })
+    const existingChat = await prisma.chat.findFirst({
+      where: {
+        OR: [
+          {
+            recipientId: receiverId,
+            senderId: senderId,
+          },
+          {
+            recipientId: senderId,
+            senderId: receiverId,
+          }
+        ]
+      }
+    })
 
-    // if (existingChat) {
-    //   return NextResponse.json({
-    //     status: 200,
-    //     chat: existingChat,
-    //   })
-    // }
+    if (existingChat) {
+      return NextResponse.json({
+        status: 200,
+        chat: existingChat,
+      })
+    }
 
-    // const chat = await prisma.chat.create({
-    //   data: {
-    //     senderId: senderId,
-    //     // message,
-    //     recipientId: receiverId,
-    //     //   socketId
-    //   },
-    // });
-
-
-    // const loggedInuser = await prisma.user.findUnique({
-    //   where: {
-    //     id: senderId,
-    //   }
-    // })
-
-    // const userProfile = await prisma.profile.findUnique({
-    //   where: {
-    //     userId: senderId,
-    //   }
-    // })
-
-    // const userConnections = await prisma.connection.findMany({
-    //   where:
-    //   {
-    //     OR: [
-    //       {
-    //         initiatorId: senderId,
-    //         status: { not: 'rejected' },
-    //       },
-    //       {
-    //         acceptorId: senderId,
-    //         status: { not: 'rejected' },
-    //       }
-    //     ]
-    //   },
-    // })
+    const chat = await prisma.chat.create({
+      data: {
+        senderId: senderId,
+        // message,
+        recipientId: receiverId,
+        //   socketId
+      },
+    });
 
 
-    // const userNotifications = await prisma.notification.findMany({
-    //   where: { userId: senderId.id },
-    // });
+    const loggedInuser = await prisma.user.findUnique({
+      where: {
+        id: senderId,
+      }
+    })
+
+    const userProfile = await prisma.profile.findUnique({
+      where: {
+        userId: senderId,
+      }
+    })
+
+    const userConnections = await prisma.connection.findMany({
+      where:
+      {
+        OR: [
+          {
+            initiatorId: senderId,
+            status: { not: 'rejected' },
+          },
+          {
+            acceptorId: senderId,
+            status: { not: 'rejected' },
+          }
+        ]
+      },
+    })
+
+
+    const userNotifications = await prisma.notification.findMany({
+      where: { userId: senderId.id },
+    });
 
     return NextResponse.json({
       status: 200,
       message: 'chat created sucessfully',
-      // user: loggedInuser,
-      // profile: userProfile,
-      // connections: userConnections,
-      // chats: chat,
-      // notifications: userNotifications,
+      user: loggedInuser,
+      profile: userProfile,
+      connections: userConnections,
+      chats: chat,
+      notifications: userNotifications,
     })
   } catch (error) {
     return NextResponse.json({

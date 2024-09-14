@@ -28,10 +28,11 @@ export interface MyUser {
 
     export interface authInterface {
       value: null | MyUser;
-      isLogedIn: boolean;
+      isLoggedIn: boolean;
       update: ({ value }: {
         value: MyUser | null
       }) => void;
+      isLoading: boolean
     }
 
 

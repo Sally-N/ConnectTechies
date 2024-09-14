@@ -26,29 +26,39 @@ export default function RootLayout({
   const [isloaded, setIsloaded] = useState(false);
 
   const getAuth = () => {
-    if ((Cookies.get('user') === '')) {
-      setCreds(null)
+    const user = Cookies.get('user');
+    if (user) {
+      const parsedUser = JSON.parse(user) as MyUser;
+      setCreds(parsedUser);
+      setIsLogedIn(true);
     } else {
-      let user = Cookies.get('user');
-      if (user) {
-        setCreds(JSON.parse(user) as unknown as MyUser)
-        return creds;
-      }
-
+      setCreds(null);
+      setIsLogedIn(false);
     }
+  };
 
-  }
+  // Trigger the authentication check when the component loads
   useEffect(() => {
-    setIsloaded(true)
-    getAuth()
-    console.log(creds, 'creds')
-  }, [])
+    setIsloaded(true);
+    getAuth();
+  }, []);
+
+  
 
   const updateCreds = ({ value }: {
     value: MyUser | null
   }) => {
-    value === null ? setIsLogedIn(false) : setIsLogedIn(true);
-    setCreds(value)
+    if(value !== null){
+      // Cookies.add('user', JSON.stringify(value), 1);
+      setCreds(value);
+      setIsLogedIn(true);
+    } else {
+      setCreds(value);
+      setIsLogedIn(false)
+    }
+    // value === null ? setIsLogedIn(false) : setIsLogedIn(true);
+    // setCreds(value)
+
   }
 
   return (
@@ -56,8 +66,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthContext.Provider value={{
           update: updateCreds,
-          isLogedIn: isLogedIn,
-          value: creds
+          isLoggedIn: isLogedIn,
+          value: creds,
+          isLoading: isloaded,
         }}>
 
           <ConnectTechiesTheme childrenElements={children} />
