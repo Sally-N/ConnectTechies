@@ -47,7 +47,7 @@ const LoginComponent = () => {
         toast.success('Login Successfully');
         console.log(JSON.stringify(authContext.value), 'v')
         console.log(authContext.isLoggedIn, 'isloggedin')
-        // router.push("/");
+        router.push("/");
 
     }
 

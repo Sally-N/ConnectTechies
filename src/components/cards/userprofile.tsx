@@ -55,13 +55,8 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                 console.log('error requesting connection')
             }
 
-
-
             loggedInUser.update({ value: responseData.updatedUser as MyUser })
-            toast.success('Connection request sent successfully')
-            // setUsersProfiles(responseData?.userProfiles);
-            // return usersProfiles;
-
+            toast.success('Connection request sent successfully');
             console.log(loggedInUser.value, 'wait')
 
         } catch (err) {
@@ -75,7 +70,7 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
 
     // initiatorId: number, acceptorId: number
     const createChat = async (user: MyUser) => {
-        let existingChat = loggedInUser.value?.chats.filter((chat) => {
+        let existingChat = loggedInUser.value?.chats?.filter((chat) => {
             return chat.recipientId == user.user.id || chat.senderId == user.user.id;
 
         })
@@ -98,14 +93,16 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
                     (chatResponse) => {
                         console.log(chatResponse, 'resChat')
                         loggedInUser.update({ value: chatResponse as MyUser });
-                    }
-                )
+                        router.push('/chat')
+                    })
             } catch (error) {
                 console.log(error)
 
             }
+        } else {
+            router.push('/chat')
+
         }
-        // router.push('/chat')
     }
 
 
@@ -149,87 +146,80 @@ const ProfileDetailsComponent: React.FC<ProfileDetailsComponentProps> = ({ user 
 
     return (
         <>
-            {
-                isLoading ? (
-                    <p> Loading</p >)
-                    : (
-
-                        <Row style={{ width: '100%' }}>
-                            {JSON.stringify(loggedInUser?.value)}
-                            <Row align={'top'} justify={'space-evenly'} style={{ width: '100%', height: '100%' }}>
-                                <Col span={3}>
-                                    <Image loading="lazy" src={getUserImage(user.profile.image)} alt="user image" width={100} height={100} />
-                                </Col>
-                                <Col span={21} style={{ width: '100%' }}>
-                                    <Row justify={'space-between'} align={'top'} style={{ width: '100%' }}>
-                                        <Col>
-                                            <Title level={5} style={{ margin: '0px' }}>{user.user.firstname + " " + user.user.lastname}</Title>
-                                            <Title level={5} style={{ margin: '0px', fontWeight: 300 }}>
-                                                {user.profile.level + " " + user.profile.specialization}
-                                            </Title>
-                                        </Col>
-                                        <Col>
-                                            {loggedInUser.value?.user?.id! && user.user.id === loggedInUser.value?.user.id!! && (
-                                                <Button type="primary" style={{ marginLeft: '10px' }} onClick={() => setOpen(!open)}>
-                                                    Edit Profile
-                                                </Button>
-                                            )}
-                                        </Col>
-                                    </Row>
-                                    <Paragraph style={{ margin: '0px', padding: '0px' }}>
-                                        {user.user.email}
-                                    </Paragraph>
-                                    <Paragraph style={{ width: '100%', margin: '0px', padding: 0 }}>
-                                        {/* Several years of experience in product design with a wide range of industries including SaaS, E-Commerce, B2B, Travel, EdTech, and Aggro-tech. Designed and managed several products and pro */}
-                                        {user.profile.aboutBio}
-                                    </Paragraph>
-                                    {loggedInUser.value?.user?.id! && user.user.id !== loggedInUser.value?.user.id!! && (
-
-                                        <Row gutter={12} justify={'end'}>
-                                            <Col>
-                                                <Button onClick={() => createChat(user as MyUser)} type={'primary'}>Message</Button>
-                                            </Col>
-                                            <Col>
-                                                <Button onClick={() => handleCreateConnection(user.user.id)} type={'default'}>Connect</Button>
-                                            </Col>
-                                        </Row>
-                                    )}
-                                </Col>
-                            </Row>
-                            <Row justify={'start'} style={{ width: '100%' }}>
-                                <Col span={8}>
-                                    <Title level={5}>
-                                        Industry
-                                    </Title>
-                                    <Paragraph>{user.profile.industries}</Paragraph>
-                                </Col>
-                                <Col span={8}>
-                                    <Title level={5}>
-                                        Country
-                                    </Title>
-                                    <Paragraph>{user.profile.country}</Paragraph>
-
-                                </Col>
-                                <Col span={8}>
-                                    <Title level={5}>
-                                        Socials
-
-                                    </Title>
-                                    <Row>
-                                        <Link href={`${user.profile.portfolioUrl}`} style={{ width: '100%' }}> Portflio Url
-                                        </Link>
-                                    </Row>
-                                    <Row>
-                                        <Link href={`${user.profile.linkedInUrl}`}> LinkedIn
-                                        </Link>
-                                    </Row>
-                                </Col>
-                            </Row>
-                            <Modal open={open} onCancel={handleCancel}>
-                                <UpdateUserTabComponent />
-                            </Modal>
+            <Row style={{ width: '100%' }}>
+                <Row align={'top'} justify={'space-evenly'} style={{ width: '100%', height: '100%' }}>
+                    <Col span={3}>
+                        <Image loading="lazy" src={getUserImage(user.profile.image)} alt="user image" width={100} height={100} />
+                    </Col>
+                    <Col span={21} style={{ width: '100%' }}>
+                        <Row justify={'space-between'} align={'top'} style={{ width: '100%' }}>
+                            <Col>
+                                <Title level={5} style={{ margin: '0px' }}>{user.user.firstname + " " + user.user.lastname}</Title>
+                                <Title level={5} style={{ margin: '0px', fontWeight: 300 }}>
+                                    {user.profile.level + " " + user.profile.specialization}
+                                </Title>
+                            </Col>
+                            <Col>
+                                {loggedInUser.value?.user?.id! && user.user.id === loggedInUser.value?.user.id!! && (
+                                    <Button type="primary" style={{ marginLeft: '10px' }} onClick={() => setOpen(!open)}>
+                                        Edit Profile
+                                    </Button>
+                                )}
+                            </Col>
                         </Row>
-                    )}
+                        <Paragraph style={{ margin: '0px', padding: '0px' }}>
+                            {user.user.email}
+                        </Paragraph>
+                        <Paragraph style={{ width: '100%', margin: '0px', padding: 0 }}>
+                            {/* Several years of experience in product design with a wide range of industries including SaaS, E-Commerce, B2B, Travel, EdTech, and Aggro-tech. Designed and managed several products and pro */}
+                            {user.profile.aboutBio}
+                        </Paragraph>
+                        {loggedInUser.value?.user?.id! && user.user.id !== loggedInUser.value?.user.id!! && (
+
+                            <Row gutter={12} justify={'end'}>
+                                <Col>
+                                    <Button onClick={() => createChat(user as MyUser)} type={'primary'}>Message</Button>
+                                </Col>
+                                <Col>
+                                    <Button onClick={() => handleCreateConnection(user.user.id)} type={'default'}>Connect</Button>
+                                </Col>
+                            </Row>
+                        )}
+                    </Col>
+                </Row>
+                <Row justify={'start'} style={{ width: '100%' }}>
+                    <Col span={8}>
+                        <Title level={5}>
+                            Industry
+                        </Title>
+                        <Paragraph>{user.profile.industries}</Paragraph>
+                    </Col>
+                    <Col span={8}>
+                        <Title level={5}>
+                            Country
+                        </Title>
+                        <Paragraph>{user.profile.country}</Paragraph>
+
+                    </Col>
+                    <Col span={8}>
+                        <Title level={5}>
+                            Socials
+
+                        </Title>
+                        <Row>
+                            <Link href={`${user.profile.portfolioUrl}`} style={{ width: '100%' }}> Portflio Url
+                            </Link>
+                        </Row>
+                        <Row>
+                            <Link href={`${user.profile.linkedInUrl}`}> LinkedIn
+                            </Link>
+                        </Row>
+                    </Col>
+                </Row>
+                <Modal open={open} onCancel={handleCancel}>
+                    <UpdateUserTabComponent />
+                </Modal>
+            </Row>
         </>
     )
 }
