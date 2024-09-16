@@ -16,8 +16,7 @@ export default function ChatPage() {
 
     return (
         <MainLayout>
-                    {JSON.stringify(theUser)}
-
+            {/* {JSON.stringify(theUser)} */}
             <Row gutter={12}>
                 <Col span={7} className="background-white">
                     <Row>
